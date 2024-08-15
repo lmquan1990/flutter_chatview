@@ -75,7 +75,7 @@ class TextMessageView extends StatelessWidget {
         dateTime.isBefore(now) && dateTime.difference(now).inDays == 1;
 
     return DateFormat(
-            isToday ? 'HH:mm' : (isYesterday ? 'MMM-dd-yyyy HH:mm' : 'MMM-dd-yyyy HH:mm'))
+            isToday ? 'HH:mm' : (isYesterday ? 'MMM/dd HH:mm' : 'MMM/dd HH:mm'))
         .format(dateTime);
   }
 
@@ -124,7 +124,7 @@ class TextMessageView extends StatelessWidget {
               ),
               Text(
                 formatDateTime(message.createdAt),
-                style: const TextStyle(fontSize: 13, color: Colors.white),
+                style: const TextStyle(fontSize: 12, color: Colors.white70),
               ),
             ],
           ),
