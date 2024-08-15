@@ -124,7 +124,7 @@ class TextMessageView extends StatelessWidget {
               ),
               Text(
                 formatDateTime(message.createdAt),
-                style: const TextStyle(fontSize: 12, color: Colors.white),
+                style: const TextStyle(fontSize: 13, color: Colors.white),
               ),
             ],
           ),
