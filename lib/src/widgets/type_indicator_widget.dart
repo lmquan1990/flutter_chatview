@@ -264,9 +264,11 @@ class _TypingIndicatorState extends State<TypingIndicator>
 
   Widget _buildStatusBubble() {
     return Container(
-      padding: chatBubbleConfig?.padding ??
-          const EdgeInsets.fromLTRB(
-              leftPadding3, 0, leftPadding3, leftPadding3),
+      // padding: chatBubbleConfig?.padding ??
+      //     const EdgeInsets.fromLTRB(
+      //         leftPadding3, 0, leftPadding3, leftPadding3),
+      padding: const EdgeInsets.fromLTRB(
+          leftPadding3, 0, leftPadding3, leftPadding3),
       margin: chatBubbleConfig?.margin ?? const EdgeInsets.fromLTRB(5, 0, 6, 2),
       decoration: BoxDecoration(
         borderRadius: chatBubbleConfig?.borderRadius ??
