@@ -23,6 +23,7 @@ import 'package:flutter/material.dart';
 
 import 'package:chatview/src/extensions/extensions.dart';
 import 'package:chatview/src/models/models.dart';
+import 'package:intl/intl.dart';
 
 import '../utils/constants/constants.dart';
 import 'link_preview.dart';
@@ -65,6 +66,19 @@ class TextMessageView extends StatelessWidget {
   /// Allow user to set color of highlighted message.
   final Color? highlightColor;
 
+  String formatDateTime(DateTime dateTime) {
+    final now = DateTime.now();
+    final isToday = dateTime.year == now.year &&
+        dateTime.month == now.month &&
+        dateTime.day == now.day;
+    final isYesterday =
+        dateTime.isBefore(now) && dateTime.difference(now).inDays == 1;
+
+    return DateFormat(
+            isToday ? 'HH:mm' : (isYesterday ? 'MMM-dd HH:mm' : 'MMM-dd HH:mm'))
+        .format(dateTime);
+  }
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -74,6 +88,7 @@ class TextMessageView extends StatelessWidget {
       children: [
         Container(
           constraints: BoxConstraints(
+              minWidth: 100,
               maxWidth: chatBubbleMaxWidth ??
                   MediaQuery.of(context).size.width * 0.75),
           padding: _padding ??
@@ -88,19 +103,30 @@ class TextMessageView extends StatelessWidget {
             color: highlightMessage ? highlightColor : _color,
             borderRadius: _borderRadius(textMessage),
           ),
-          child: textMessage.isUrl
-              ? LinkPreview(
-                  linkPreviewConfig: _linkPreviewConfig,
-                  url: textMessage,
-                )
-              : Text(
-                  textMessage,
-                  style: _textStyle ??
-                      textTheme.bodyMedium!.copyWith(
-                        color: Colors.white,
-                        fontSize: 16,
-                      ),
-                ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              textMessage.isUrl
+                  ? LinkPreview(
+                      linkPreviewConfig: _linkPreviewConfig,
+                      url: textMessage,
+                    )
+                  : Text(
+                      textMessage,
+                      style: _textStyle ??
+                          textTheme.bodyMedium!.copyWith(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                    ),
+              Text(
+                formatDateTime(message.createdAt),
+                style: TextStyle(
+                    fontSize: 12,
+                    color: isMessageBySender ? Colors.white10 : Colors.white38),
+              ),
+            ],
+          ),
         ),
         if (message.reaction.reactions.isNotEmpty)
           ReactionWidget(
