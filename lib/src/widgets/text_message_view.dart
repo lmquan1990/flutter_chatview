@@ -23,6 +23,7 @@ import 'package:flutter/material.dart';
 
 import 'package:chatview/src/extensions/extensions.dart';
 import 'package:chatview/src/models/models.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 import '../utils/constants/constants.dart';
@@ -122,9 +123,20 @@ class TextMessageView extends StatelessWidget {
               const SizedBox(
                 height: 5,
               ),
-              Text(
-                formatDateTime(message.createdAt),
-                style: const TextStyle(fontSize: 12, color: Colors.white70),
+              Row(
+                children: [
+                  Text(
+                    formatDateTime(message.createdAt),
+                    style: const TextStyle(fontSize: 12, color: Colors.white70),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                      onPressed: () {
+                        Clipboard.setData(ClipboardData(text: textMessage));
+                      },
+                      icon: const Icon(Icons.copy_all_outlined,
+                          color: Colors.white70))
+                ],
               ),
             ],
           ),
