@@ -19,6 +19,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import 'dart:async';
+
 import 'package:chatview/src/widgets/message_view.dart';
 import 'package:flutter/material.dart';
 
@@ -33,6 +35,7 @@ import '../utils/constants/constants.dart';
 import 'link_preview.dart';
 import 'reaction_widget.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:share_plus/share_plus.dart';
 
 enum MenuItem { copy, share, export }
 
@@ -131,6 +134,7 @@ class _TextMessageViewState extends State<TextMessageView> {
     final textTheme = Theme.of(context).textTheme;
     final textMessage = widget.message.message;
     FlutterTts flutterTts = FlutterTts();
+    bool isSharePopupShown = false;
 
     return Stack(
       clipBehavior: Clip.none,
@@ -205,13 +209,27 @@ class _TextMessageViewState extends State<TextMessageView> {
                     width: 30,
                     child: PopupMenuButton<MenuItem>(
                       icon: const Icon(
-                        Ionicons.arrow_redo_outline,
+                        Ionicons.grid_outline,
                         size: 20,
                         color: Colors.white70,
                       ),
-                      onSelected: (MenuItem item) {
+                      onSelected: (MenuItem item) async {
                         if (item == MenuItem.copy) {
                           Clipboard.setData(ClipboardData(text: textMessage));
+                        } else if (item == MenuItem.share){
+                          if (!isSharePopupShown) {
+                            isSharePopupShown = true;
+                            await Share.share(
+                              textMessage,
+                            ).whenComplete(() {
+                              Timer(
+                                  const Duration(
+                                    milliseconds: 600,
+                                  ), () {
+                                isSharePopupShown = false;
+                              });
+                            });
+                          }
                         }
                       },
                       itemBuilder: (BuildContext context) =>
