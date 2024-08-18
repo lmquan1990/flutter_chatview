@@ -24,6 +24,7 @@ import 'package:chatview/src/widgets/chat_view_inherited_widget.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chatview/src/extensions/extensions.dart';
+import 'package:provider/provider.dart';
 import '../utils/constants/constants.dart';
 import 'image_message_view.dart';
 import 'text_message_view.dart';
@@ -209,15 +210,20 @@ class _MessageViewState extends State<MessageView>
                     highlightScale: widget.highlightScale,
                   );
                 } else if (widget.message.messageType.isText) {
-                  return TextMessageView(
-                    inComingChatBubbleConfig: widget.inComingChatBubbleConfig,
-                    outgoingChatBubbleConfig: widget.outgoingChatBubbleConfig,
-                    isMessageBySender: widget.isMessageBySender,
-                    message: widget.message,
-                    chatBubbleMaxWidth: widget.chatBubbleMaxWidth,
-                    messageReactionConfig: messageConfig?.messageReactionConfig,
-                    highlightColor: widget.highlightColor,
-                    highlightMessage: widget.shouldHighlight,
+                  return MultiProvider(
+                    providers: [
+                      ChangeNotifierProvider(create: (_) => Speaking()),
+                    ],
+                    child: TextMessageView(
+                      inComingChatBubbleConfig: widget.inComingChatBubbleConfig,
+                      outgoingChatBubbleConfig: widget.outgoingChatBubbleConfig,
+                      isMessageBySender: widget.isMessageBySender,
+                      message: widget.message,
+                      chatBubbleMaxWidth: widget.chatBubbleMaxWidth,
+                      messageReactionConfig: messageConfig?.messageReactionConfig,
+                      highlightColor: widget.highlightColor,
+                      highlightMessage: widget.shouldHighlight,
+                    ),
                   );
                 } else if (widget.message.messageType.isVoice) {
                   return VoiceMessageView(
@@ -278,5 +284,16 @@ class _MessageViewState extends State<MessageView>
   void dispose() {
     _animationController?.dispose();
     super.dispose();
+  }
+}
+
+class Speaking with ChangeNotifier {
+  bool _isSpeaking = false;
+
+  bool get speaking => _isSpeaking;
+
+  void changeSpeaking(bool isSpeaking) {
+    _isSpeaking = isSpeaking;
+    notifyListeners();
   }
 }

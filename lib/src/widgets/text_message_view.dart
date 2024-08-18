@@ -19,18 +19,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import 'package:chatview/src/widgets/message_view.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chatview/src/extensions/extensions.dart';
 import 'package:chatview/src/models/models.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:ionicons/ionicons.dart';
+import 'package:provider/provider.dart';
 
 import '../utils/constants/constants.dart';
 import 'link_preview.dart';
 import 'reaction_widget.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
-class TextMessageView extends StatelessWidget {
+enum MenuItem { copy, share, export }
+
+class TextMessageView extends StatefulWidget {
   const TextMessageView({
     Key? key,
     required this.isMessageBySender,
@@ -67,6 +73,41 @@ class TextMessageView extends StatelessWidget {
   /// Allow user to set color of highlighted message.
   final Color? highlightColor;
 
+  @override
+  State<TextMessageView> createState() => _TextMessageViewState();
+}
+
+class _TextMessageViewState extends State<TextMessageView> {
+  EdgeInsetsGeometry? get _padding => widget.isMessageBySender
+      ? widget.outgoingChatBubbleConfig?.padding
+      : widget.inComingChatBubbleConfig?.padding;
+
+  EdgeInsetsGeometry? get _margin => widget.isMessageBySender
+      ? widget.outgoingChatBubbleConfig?.margin
+      : widget.inComingChatBubbleConfig?.margin;
+
+  LinkPreviewConfiguration? get _linkPreviewConfig => widget.isMessageBySender
+      ? widget.outgoingChatBubbleConfig?.linkPreviewConfig
+      : widget.inComingChatBubbleConfig?.linkPreviewConfig;
+
+  TextStyle? get _textStyle => widget.isMessageBySender
+      ? widget.outgoingChatBubbleConfig?.textStyle
+      : widget.inComingChatBubbleConfig?.textStyle;
+
+  BorderRadiusGeometry _borderRadius(String message) => widget.isMessageBySender
+      ? widget.outgoingChatBubbleConfig?.borderRadius ??
+          (message.length < 37
+              ? BorderRadius.circular(replyBorderRadius1)
+              : BorderRadius.circular(replyBorderRadius2))
+      : widget.inComingChatBubbleConfig?.borderRadius ??
+          (message.length < 29
+              ? BorderRadius.circular(replyBorderRadius1)
+              : BorderRadius.circular(replyBorderRadius2));
+
+  Color get _color => widget.isMessageBySender
+      ? widget.outgoingChatBubbleConfig?.color ?? Colors.purple
+      : widget.inComingChatBubbleConfig?.color ?? Colors.grey.shade500;
+
   String formatDateTime(DateTime dateTime) {
     final now = DateTime.now();
     final isToday = dateTime.year == now.year &&
@@ -81,16 +122,23 @@ class TextMessageView extends StatelessWidget {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final textMessage = message.message;
+    final textMessage = widget.message.message;
+    FlutterTts flutterTts = FlutterTts();
+
     return Stack(
       clipBehavior: Clip.none,
       children: [
         Container(
           constraints: BoxConstraints(
               minWidth: 100,
-              maxWidth: chatBubbleMaxWidth ??
+              maxWidth: widget.chatBubbleMaxWidth ??
                   MediaQuery.of(context).size.width * 0.75),
           padding: _padding ??
               const EdgeInsets.symmetric(
@@ -98,10 +146,10 @@ class TextMessageView extends StatelessWidget {
                 vertical: 10,
               ),
           margin: _margin ??
-              EdgeInsets.fromLTRB(
-                  5, 0, 6, message.reaction.reactions.isNotEmpty ? 15 : 2),
+              EdgeInsets.fromLTRB(5, 0, 6,
+                  widget.message.reaction.reactions.isNotEmpty ? 15 : 2),
           decoration: BoxDecoration(
-            color: highlightMessage ? highlightColor : _color,
+            color: widget.highlightMessage ? widget.highlightColor : _color,
             borderRadius: _borderRadius(textMessage),
           ),
           child: Column(
@@ -120,65 +168,91 @@ class TextMessageView extends StatelessWidget {
                             fontSize: 16,
                           ),
                     ),
-              const SizedBox(
-                height: 5,
-              ),
-              Row(
+              Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                alignment: WrapAlignment.start,
                 children: [
                   Text(
-                    formatDateTime(message.createdAt),
+                    formatDateTime(widget.message.createdAt),
                     style: const TextStyle(fontSize: 12, color: Colors.white70),
                   ),
-                  const Spacer(),
-                  IconButton(
-                      onPressed: () {
-                        Clipboard.setData(ClipboardData(text: textMessage));
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  SizedBox(
+                    width: 30,
+                    child: IconButton(
+                        onPressed: () async {
+                          if (Provider.of<Speaking>(context, listen: false)
+                              .speaking) {
+                            context.read<Speaking>().changeSpeaking(false);
+                            await flutterTts.stop();
+                          } else {
+                            context.read<Speaking>().changeSpeaking(true);
+                            await flutterTts.speak(textMessage);
+                            await flutterTts.awaitSpeakCompletion(true);
+                            context.read<Speaking>().changeSpeaking(false);
+                          }
+                        },
+                        icon: Icon(
+                            context.watch<Speaking>().speaking
+                                ? Ionicons.pause_circle_outline
+                                : Ionicons.volume_high_outline,
+                            size: 20,
+                            color: Colors.white70)),
+                  ),
+                  SizedBox(
+                    width: 30,
+                    child: PopupMenuButton<MenuItem>(
+                      icon: const Icon(
+                        Ionicons.arrow_redo_outline,
+                        size: 20,
+                        color: Colors.white70,
+                      ),
+                      onSelected: (MenuItem item) {
+                        if (item == MenuItem.copy) {
+                          Clipboard.setData(ClipboardData(text: textMessage));
+                        }
                       },
-                      icon: const Icon(Icons.copy_all_outlined,
-                          color: Colors.white70))
+                      itemBuilder: (BuildContext context) =>
+                          <PopupMenuEntry<MenuItem>>[
+                        const PopupMenuItem<MenuItem>(
+                          value: MenuItem.copy,
+                          child: ListTile(
+                            leading: Icon(Ionicons.copy_outline),
+                            title: Text('Copy'),
+                          ),
+                        ),
+                        const PopupMenuItem<MenuItem>(
+                          value: MenuItem.share,
+                          child: ListTile(
+                            leading: Icon(Ionicons.share_outline),
+                            title: Text('Share'),
+                          ),
+                        ),
+                        const PopupMenuItem<MenuItem>(
+                          value: MenuItem.export,
+                          child: ListTile(
+                            leading: Icon(Ionicons.download_outline),
+                            title: Text('Export'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ],
           ),
         ),
-        if (message.reaction.reactions.isNotEmpty)
+        if (widget.message.reaction.reactions.isNotEmpty)
           ReactionWidget(
-            key: key,
-            isMessageBySender: isMessageBySender,
-            reaction: message.reaction,
-            messageReactionConfig: messageReactionConfig,
+            key: widget.key,
+            isMessageBySender: widget.isMessageBySender,
+            reaction: widget.message.reaction,
+            messageReactionConfig: widget.messageReactionConfig,
           ),
       ],
     );
   }
-
-  EdgeInsetsGeometry? get _padding => isMessageBySender
-      ? outgoingChatBubbleConfig?.padding
-      : inComingChatBubbleConfig?.padding;
-
-  EdgeInsetsGeometry? get _margin => isMessageBySender
-      ? outgoingChatBubbleConfig?.margin
-      : inComingChatBubbleConfig?.margin;
-
-  LinkPreviewConfiguration? get _linkPreviewConfig => isMessageBySender
-      ? outgoingChatBubbleConfig?.linkPreviewConfig
-      : inComingChatBubbleConfig?.linkPreviewConfig;
-
-  TextStyle? get _textStyle => isMessageBySender
-      ? outgoingChatBubbleConfig?.textStyle
-      : inComingChatBubbleConfig?.textStyle;
-
-  BorderRadiusGeometry _borderRadius(String message) => isMessageBySender
-      ? outgoingChatBubbleConfig?.borderRadius ??
-          (message.length < 37
-              ? BorderRadius.circular(replyBorderRadius1)
-              : BorderRadius.circular(replyBorderRadius2))
-      : inComingChatBubbleConfig?.borderRadius ??
-          (message.length < 29
-              ? BorderRadius.circular(replyBorderRadius1)
-              : BorderRadius.circular(replyBorderRadius2));
-
-  Color get _color => isMessageBySender
-      ? outgoingChatBubbleConfig?.color ?? Colors.purple
-      : inComingChatBubbleConfig?.color ?? Colors.grey.shade500;
 }
