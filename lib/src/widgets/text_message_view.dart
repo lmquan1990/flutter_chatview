@@ -27,8 +27,8 @@ import 'package:flutter/material.dart';
 import 'package:chatview/src/extensions/extensions.dart';
 import 'package:chatview/src/models/models.dart';
 import 'package:flutter/services.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:intl/intl.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/constants/constants.dart';
@@ -37,7 +37,7 @@ import 'reaction_widget.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:share_plus/share_plus.dart';
 
-enum MenuItem { copy, share, export }
+enum MenuItem { copy, share, export_word, export_pdf, export_txt }
 
 class TextMessageView extends StatefulWidget {
   const TextMessageView({
@@ -200,8 +200,8 @@ class _TextMessageViewState extends State<TextMessageView> {
                         },
                         icon: Icon(
                             context.watch<Speaking>().speaking
-                                ? Ionicons.pause_circle_outline
-                                : Ionicons.volume_high_outline,
+                                ? IconsaxPlusLinear.pause
+                                : IconsaxPlusLinear.volume_high,
                             size: 20,
                             color: Colors.white70)),
                   ),
@@ -209,14 +209,14 @@ class _TextMessageViewState extends State<TextMessageView> {
                     width: 30,
                     child: PopupMenuButton<MenuItem>(
                       icon: const Icon(
-                        Ionicons.grid_outline,
+                        IconsaxPlusLinear.send_2,
                         size: 20,
                         color: Colors.white70,
                       ),
                       onSelected: (MenuItem item) async {
                         if (item == MenuItem.copy) {
                           Clipboard.setData(ClipboardData(text: textMessage));
-                        } else if (item == MenuItem.share){
+                        } else if (item == MenuItem.share) {
                           if (!isSharePopupShown) {
                             isSharePopupShown = true;
                             await Share.share(
@@ -236,24 +236,75 @@ class _TextMessageViewState extends State<TextMessageView> {
                           <PopupMenuEntry<MenuItem>>[
                         const PopupMenuItem<MenuItem>(
                           value: MenuItem.copy,
-                          child: ListTile(
-                            leading: Icon(Ionicons.copy_outline),
-                            title: Text('Copy'),
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 10),
+                            child: ListTile(
+                              leading: Icon(IconsaxPlusLinear.copy),
+                              title: Text('Copy'),
+                            ),
                           ),
                         ),
                         const PopupMenuItem<MenuItem>(
                           value: MenuItem.share,
-                          child: ListTile(
-                            leading: Icon(Ionicons.share_outline),
-                            title: Text('Share'),
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 10),
+                            child: ListTile(
+                              leading: Icon(IconsaxPlusLinear.share),
+                              title: Text('Share'),
+                            ),
                           ),
                         ),
-                        const PopupMenuItem<MenuItem>(
-                          value: MenuItem.export,
-                          child: ListTile(
-                            leading: Icon(Ionicons.download_outline),
-                            title: Text('Export'),
-                          ),
+                        PopupMenuItem(
+                          value: null,
+                          child: PopupMenuButton(
+                            child: TextButton.icon(
+                              label: const Padding(
+                                padding: EdgeInsets.only(left: 10),
+                                child: Text(
+                                  'Export to...',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                              icon: const Icon(
+                                  IconsaxPlusLinear.document_download,
+                                  color: Colors.black),
+                              onPressed: null,
+                            ),
+                            itemBuilder: (BuildContext context) {
+                              return [
+                                const PopupMenuItem<MenuItem>(
+                                  value: MenuItem.export_word,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(left: 10, right: 5),
+                                    child: ListTile(
+                                      leading: Icon(IconsaxPlusLinear.document_text),
+                                      title: Text('Word'),
+                                    ),
+                                  ),
+                                ),
+                                const PopupMenuItem<MenuItem>(
+                                  value: MenuItem.export_pdf,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(left: 10, right: 5),
+                                    child: ListTile(
+                                      leading: Icon(IconsaxPlusLinear.document_text),
+                                      title: Text('PDF'),
+                                    ),
+                                  ),
+                                ),
+                                const PopupMenuItem<MenuItem>(
+                                  value: MenuItem.export_txt,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(left: 10, right: 5),
+                                    child: ListTile(
+                                      leading: Icon(IconsaxPlusLinear.note_text),
+                                      title: Text('Text'),
+                                    ),
+                                  ),
+                                ),
+                              ];
+                            },
+                          ), // Prevent main menu item selection
                         ),
                       ],
                     ),
