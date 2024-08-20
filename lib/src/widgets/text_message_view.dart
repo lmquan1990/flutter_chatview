@@ -20,8 +20,10 @@
  * SOFTWARE.
  */
 import 'dart:async';
+import 'dart:io';
 
 import 'package:chatview/src/widgets/message_view.dart';
+import 'package:docx_template/docx_template.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chatview/src/extensions/extensions.dart';
@@ -29,6 +31,7 @@ import 'package:chatview/src/models/models.dart';
 import 'package:flutter/services.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/constants/constants.dart';
@@ -36,8 +39,9 @@ import 'link_preview.dart';
 import 'reaction_widget.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-enum MenuItem { copy, share, export_word, export_pdf, export_txt }
+enum MenuItem { copy, share, word, pdf, txt }
 
 class TextMessageView extends StatefulWidget {
   const TextMessageView({
@@ -193,8 +197,8 @@ class _TextMessageViewState extends State<TextMessageView> {
                             await flutterTts.stop();
                           } else {
                             context.read<Speaking>().changeSpeaking(true);
-                            await flutterTts.speak(textMessage);
                             await flutterTts.awaitSpeakCompletion(true);
+                            await flutterTts.speak(textMessage);
                             context.read<Speaking>().changeSpeaking(false);
                           }
                         },
@@ -230,6 +234,22 @@ class _TextMessageViewState extends State<TextMessageView> {
                               });
                             });
                           }
+                        } else if (item == MenuItem.word) {
+                          final data =
+                              await rootBundle.load('assets/template.docx');
+                          final bytes = data.buffer.asUint8List();
+
+                          final docx = await DocxTemplate.fromBytes(bytes);
+
+                          Content c = Content();
+                          c.add(TextContent("plainview", textMessage));
+
+                          final d = await docx.generate(c);
+
+                          if (d != null) {
+                            FileStorage.writeCounter(
+                                d, "generated_docx_with_replaced_content.docx");
+                          }
                         }
                       },
                       itemBuilder: (BuildContext context) =>
@@ -249,62 +269,41 @@ class _TextMessageViewState extends State<TextMessageView> {
                           child: Padding(
                             padding: EdgeInsets.only(left: 10),
                             child: ListTile(
-                              leading: Icon(IconsaxPlusLinear.share),
+                              leading: Icon(IconsaxPlusLinear.send_2),
                               title: Text('Share'),
                             ),
                           ),
                         ),
-                        PopupMenuItem(
-                          value: null,
-                          child: PopupMenuButton(
-                            child: TextButton.icon(
-                              label: const Padding(
-                                padding: EdgeInsets.only(left: 10),
-                                child: Text(
-                                  'Export to...',
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                              ),
-                              icon: const Icon(
-                                  IconsaxPlusLinear.document_download,
-                                  color: Colors.black),
-                              onPressed: null,
+                        const PopupMenuItem<MenuItem>(
+                          value: MenuItem.word,
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 10),
+                            child: ListTile(
+                              leading:
+                                  Icon(IconsaxPlusLinear.document_download),
+                              title: Text('Export to Word'),
                             ),
-                            itemBuilder: (BuildContext context) {
-                              return [
-                                const PopupMenuItem<MenuItem>(
-                                  value: MenuItem.export_word,
-                                  child: Padding(
-                                    padding: EdgeInsets.only(left: 10, right: 5),
-                                    child: ListTile(
-                                      leading: Icon(IconsaxPlusLinear.document_text),
-                                      title: Text('Word'),
-                                    ),
-                                  ),
-                                ),
-                                const PopupMenuItem<MenuItem>(
-                                  value: MenuItem.export_pdf,
-                                  child: Padding(
-                                    padding: EdgeInsets.only(left: 10, right: 5),
-                                    child: ListTile(
-                                      leading: Icon(IconsaxPlusLinear.document_text),
-                                      title: Text('PDF'),
-                                    ),
-                                  ),
-                                ),
-                                const PopupMenuItem<MenuItem>(
-                                  value: MenuItem.export_txt,
-                                  child: Padding(
-                                    padding: EdgeInsets.only(left: 10, right: 5),
-                                    child: ListTile(
-                                      leading: Icon(IconsaxPlusLinear.note_text),
-                                      title: Text('Text'),
-                                    ),
-                                  ),
-                                ),
-                              ];
-                            },
-                          ), // Prevent main menu item selection
+                          ),
+                        ),
+                        const PopupMenuItem<MenuItem>(
+                          value: MenuItem.pdf,
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 10),
+                            child: ListTile(
+                              leading: Icon(IconsaxPlusLinear.document_text),
+                              title: Text('Export to PDF'),
+                            ),
+                          ),
+                        ),
+                        const PopupMenuItem<MenuItem>(
+                          value: MenuItem.txt,
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 10),
+                            child: ListTile(
+                              leading: Icon(IconsaxPlusLinear.note_text),
+                              title: Text('Export to TXT'),
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -323,5 +322,48 @@ class _TextMessageViewState extends State<TextMessageView> {
           ),
       ],
     );
+  }
+}
+
+// To save the file in the device
+class FileStorage {
+  static Future<String> getExternalDocumentPath() async {
+    // To check whether permission is given for this app or not.
+    var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      // If not we will ask for permission first
+      await Permission.storage.request();
+    }
+    Directory _directory = Directory("");
+    if (Platform.isAndroid) {
+      // Redirects it to download folder in android
+      _directory = Directory("/storage/emulated/0/Download");
+    } else {
+      _directory = await getApplicationDocumentsDirectory();
+    }
+
+    final exPath = _directory.path;
+    print("Saved Path: $exPath");
+    await Directory(exPath).create(recursive: true);
+    return exPath;
+  }
+
+  static Future<String> get _localPath async {
+    // final directory = await getApplicationDocumentsDirectory();
+    // return directory.path;
+    // To get the external path from device of download folder
+    final String directory = await getExternalDocumentPath();
+    return directory;
+  }
+
+  static Future<File> writeCounter(List<int> bytes,String name) async {
+    final path = await _localPath;
+    // Create a file for the path of
+    // device and file name with extension
+    File file= File('$path/$name');;
+    print("Save file");
+
+    // Write the data in the file you have created
+    return file.writeAsBytes(bytes);
   }
 }

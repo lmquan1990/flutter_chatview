@@ -210,17 +210,16 @@ class _MessageViewState extends State<MessageView>
                     highlightScale: widget.highlightScale,
                   );
                 } else if (widget.message.messageType.isText) {
-                  return MultiProvider(
-                    providers: [
-                      ChangeNotifierProvider(create: (_) => Speaking()),
-                    ],
+                  return ChangeNotifierProvider(
+                    create: (context) => Speaking(),
                     child: TextMessageView(
                       inComingChatBubbleConfig: widget.inComingChatBubbleConfig,
                       outgoingChatBubbleConfig: widget.outgoingChatBubbleConfig,
                       isMessageBySender: widget.isMessageBySender,
                       message: widget.message,
                       chatBubbleMaxWidth: widget.chatBubbleMaxWidth,
-                      messageReactionConfig: messageConfig?.messageReactionConfig,
+                      messageReactionConfig:
+                          messageConfig?.messageReactionConfig,
                       highlightColor: widget.highlightColor,
                       highlightMessage: widget.shouldHighlight,
                     ),
@@ -287,7 +286,7 @@ class _MessageViewState extends State<MessageView>
   }
 }
 
-class Speaking with ChangeNotifier {
+class Speaking extends ChangeNotifier {
   bool _isSpeaking = false;
 
   bool get speaking => _isSpeaking;
