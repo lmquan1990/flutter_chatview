@@ -23,7 +23,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:chatview/src/widgets/message_view.dart';
-import 'package:docx_template/docx_template.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chatview/src/extensions/extensions.dart';
@@ -31,8 +30,10 @@ import 'package:chatview/src/models/models.dart';
 import 'package:flutter/services.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:intl/intl.dart';
+import 'package:markdown/markdown.dart' as md;
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:toastification/toastification.dart';
 
 import '../utils/constants/constants.dart';
 import 'link_preview.dart';
@@ -40,8 +41,9 @@ import 'reaction_widget.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:htmltopdfwidgets/htmltopdfwidgets.dart' as html2pdf;
 
-enum MenuItem { copy, share, word, pdf, txt }
+enum MenuItem { copy, share, pdf, txt }
 
 class TextMessageView extends StatefulWidget {
   const TextMessageView({
@@ -163,6 +165,10 @@ class _TextMessageViewState extends State<TextMessageView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                widget.message.sentBy == '1' ? 'Gemini AI' : 'You',
+                style: const TextStyle(color: Colors.blueAccent),
+              ),
               textMessage.isUrl
                   ? LinkPreview(
                       linkPreviewConfig: _linkPreviewConfig,
@@ -190,6 +196,9 @@ class _TextMessageViewState extends State<TextMessageView> {
                   SizedBox(
                     width: 30,
                     child: IconButton(
+                        splashColor: Colors.transparent,
+                        hoverColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
                         onPressed: () async {
                           if (Provider.of<Speaking>(context, listen: false)
                               .speaking) {
@@ -199,7 +208,9 @@ class _TextMessageViewState extends State<TextMessageView> {
                             context.read<Speaking>().changeSpeaking(true);
                             await flutterTts.awaitSpeakCompletion(true);
                             await flutterTts.speak(textMessage);
-                            context.read<Speaking>().changeSpeaking(false);
+                            if (context.mounted) {
+                              context.read<Speaking>().changeSpeaking(false);
+                            }
                           }
                         },
                         icon: Icon(
@@ -213,7 +224,7 @@ class _TextMessageViewState extends State<TextMessageView> {
                     width: 30,
                     child: PopupMenuButton<MenuItem>(
                       icon: const Icon(
-                        IconsaxPlusLinear.send_2,
+                        IconsaxPlusLinear.more,
                         size: 20,
                         color: Colors.white70,
                       ),
@@ -234,21 +245,101 @@ class _TextMessageViewState extends State<TextMessageView> {
                               });
                             });
                           }
-                        } else if (item == MenuItem.word) {
-                          final data =
-                              await rootBundle.load('assets/template.docx');
-                          final bytes = data.buffer.asUint8List();
+                        } else if (item == MenuItem.pdf) {
+                          final newpdf = html2pdf.Document();
+                          List<html2pdf.Widget> widgets =
+                              await html2pdf.HTMLToPdf()
+                                  .convert(md.markdownToHtml(textMessage));
+                          newpdf.addPage(html2pdf.MultiPage(
+                              maxPages: 200,
+                              build: (context) {
+                                return widgets;
+                              }));
 
-                          final docx = await DocxTemplate.fromBytes(bytes);
+                          if (await FileStorage.writePdf(await newpdf.save(),
+                              "NakamaAI_${DateFormat('yyyyMMddmmhhss').format(DateTime.now())}.pdf")) {
+                            toastification.show(
+                              context: context.mounted ? context : null,
+                              type: ToastificationType.success,
+                              style: ToastificationStyle.fillColored,
+                              primaryColor: Colors.green,
+                              title: const Text(
+                                'Info',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 18),
+                              ),
+                              description: const Text(
+                                'File has been downloaded to the Download folder.',
+                                style: TextStyle(fontSize: 18),
+                              ),
+                              alignment: Alignment.bottomCenter,
+                              autoCloseDuration: const Duration(seconds: 3),
+                            );
+                          } else {
+                            toastification.show(
+                              context: context.mounted ? context : null,
+                              type: ToastificationType.error,
+                              style: ToastificationStyle.fillColored,
+                              primaryColor: Colors.red,
+                              title: const Text(
+                                'Error',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 18),
+                              ),
+                              description: const Text(
+                                'The app does not have permission to save files.',
+                                style: TextStyle(fontSize: 18),
+                              ),
+                              alignment: Alignment.bottomCenter,
+                              autoCloseDuration: const Duration(seconds: 3),
+                            );
+                          }
 
-                          Content c = Content();
-                          c.add(TextContent("plainview", textMessage));
-
-                          final d = await docx.generate(c);
-
-                          if (d != null) {
-                            FileStorage.writeCounter(
-                                d, "generated_docx_with_replaced_content.docx");
+                          //Web
+                          // var savedFile = await pdf.save();
+                          // List<int> fileInts = List.from(savedFile);
+                          // web.HTMLAnchorElement()
+                          //   ..href = "data:application/octet-stream;charset=utf-16le;base64,${base64.encode(fileInts)}"
+                          //   ..setAttribute("download", "${DateTime.now().millisecondsSinceEpoch}.pdf")
+                          //   ..click();
+                        } else if (item == MenuItem.txt) {
+                          if (await FileStorage.writeTxt(textMessage,
+                              "NakamaAI_${DateFormat('yyyyMMddmmhhss').format(DateTime.now())}.txt")) {
+                            toastification.show(
+                              context: context.mounted ? context : null,
+                              type: ToastificationType.success,
+                              style: ToastificationStyle.fillColored,
+                              primaryColor: Colors.green,
+                              title: const Text(
+                                'Info',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 18),
+                              ),
+                              description: const Text(
+                                'File has been downloaded to the Download folder.',
+                                style: TextStyle(fontSize: 18),
+                              ),
+                              alignment: Alignment.bottomCenter,
+                              autoCloseDuration: const Duration(seconds: 3),
+                            );
+                          } else {
+                            toastification.show(
+                              context: context.mounted ? context : null,
+                              type: ToastificationType.error,
+                              style: ToastificationStyle.fillColored,
+                              primaryColor: Colors.red,
+                              title: const Text(
+                                'Error',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 18),
+                              ),
+                              description: const Text(
+                                'The app does not have permission to save files.',
+                                style: TextStyle(fontSize: 18),
+                              ),
+                              alignment: Alignment.bottomCenter,
+                              autoCloseDuration: const Duration(seconds: 3),
+                            );
                           }
                         }
                       },
@@ -264,6 +355,7 @@ class _TextMessageViewState extends State<TextMessageView> {
                             ),
                           ),
                         ),
+                        const PopupMenuDivider(),
                         const PopupMenuItem<MenuItem>(
                           value: MenuItem.share,
                           child: Padding(
@@ -274,17 +366,7 @@ class _TextMessageViewState extends State<TextMessageView> {
                             ),
                           ),
                         ),
-                        const PopupMenuItem<MenuItem>(
-                          value: MenuItem.word,
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10),
-                            child: ListTile(
-                              leading:
-                                  Icon(IconsaxPlusLinear.document_download),
-                              title: Text('Export to Word'),
-                            ),
-                          ),
-                        ),
+                        const PopupMenuDivider(),
                         const PopupMenuItem<MenuItem>(
                           value: MenuItem.pdf,
                           child: Padding(
@@ -295,6 +377,7 @@ class _TextMessageViewState extends State<TextMessageView> {
                             ),
                           ),
                         ),
+                        const PopupMenuDivider(),
                         const PopupMenuItem<MenuItem>(
                           value: MenuItem.txt,
                           child: Padding(
@@ -325,27 +408,42 @@ class _TextMessageViewState extends State<TextMessageView> {
   }
 }
 
+Future<String> getPath() async {
+  // Permission granted, proceed with storage operations
+  Directory directory = Directory("");
+  if (Platform.isAndroid) {
+    // Redirects it to download folder in android
+    directory = Directory("/storage/emulated/0/Download");
+  } else {
+    directory = await getApplicationDocumentsDirectory();
+  }
+  final exPath = directory.path;
+  await Directory(exPath).create(recursive: true);
+  return exPath;
+}
+
 // To save the file in the device
 class FileStorage {
   static Future<String> getExternalDocumentPath() async {
     // To check whether permission is given for this app or not.
     var status = await Permission.storage.status;
-    if (!status.isGranted) {
-      // If not we will ask for permission first
-      await Permission.storage.request();
-    }
-    Directory _directory = Directory("");
-    if (Platform.isAndroid) {
-      // Redirects it to download folder in android
-      _directory = Directory("/storage/emulated/0/Download");
-    } else {
-      _directory = await getApplicationDocumentsDirectory();
-    }
 
-    final exPath = _directory.path;
-    print("Saved Path: $exPath");
-    await Directory(exPath).create(recursive: true);
-    return exPath;
+    if (status.isGranted) {
+      return getPath();
+    } else if (status.isDenied) {
+      // Permission denied, request it
+      Map<Permission, PermissionStatus> statuses =
+          await [Permission.storage].request();
+      if (statuses[Permission.storage] == PermissionStatus.granted) {
+        return getPath();
+      } else {
+        // Permission denied even after request, handle accordingly
+      }
+    } else if (status.isPermanentlyDenied) {
+      // Permission permanently denied, guide user to app settings
+      openAppSettings();
+    }
+    return '';
   }
 
   static Future<String> get _localPath async {
@@ -356,14 +454,28 @@ class FileStorage {
     return directory;
   }
 
-  static Future<File> writeCounter(List<int> bytes,String name) async {
+  static Future<bool> writeTxt(String text, String name) async {
+    final path = await _localPath;
+    if (path != '') {
+      File file = File('$path/$name');
+      await file.writeAsString(text);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  static Future<bool> writePdf(List<int> bytes, String name) async {
     final path = await _localPath;
     // Create a file for the path of
     // device and file name with extension
-    File file= File('$path/$name');;
-    print("Save file");
-
-    // Write the data in the file you have created
-    return file.writeAsBytes(bytes);
+    if (path != '') {
+      File file = File('$path/$name');
+      // Write the data in the file you have created
+      await file.writeAsBytes(bytes);
+      return true;
+    } else {
+      return false;
+    }
   }
 }
