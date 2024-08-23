@@ -141,6 +141,7 @@ class _TextMessageViewState extends State<TextMessageView> {
     final textMessage = widget.message.message;
     FlutterTts flutterTts = FlutterTts();
     bool isSharePopupShown = false;
+    double menuHeight = 30;
 
     return Stack(
       clipBehavior: Clip.none,
@@ -166,8 +167,11 @@ class _TextMessageViewState extends State<TextMessageView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                widget.message.sentBy == '1' ? 'Gemini AI' : 'You',
-                style: const TextStyle(color: Colors.blueAccent),
+                widget.message.sentBy == '1' ? 'You' : 'Gemini AI',
+                style: const TextStyle(color: Colors.blueAccent, fontSize: 15),
+              ),
+              const SizedBox(
+                height: 5,
               ),
               textMessage.isUrl
                   ? LinkPreview(
@@ -345,46 +349,58 @@ class _TextMessageViewState extends State<TextMessageView> {
                       },
                       itemBuilder: (BuildContext context) =>
                           <PopupMenuEntry<MenuItem>>[
-                        const PopupMenuItem<MenuItem>(
+                        PopupMenuItem<MenuItem>(
                           value: MenuItem.copy,
                           child: Padding(
-                            padding: EdgeInsets.only(left: 10),
-                            child: ListTile(
-                              leading: Icon(IconsaxPlusLinear.copy),
-                              title: Text('Copy'),
+                            padding: const EdgeInsets.only(left: 10),
+                            child: SizedBox(
+                              height: menuHeight,
+                              child: const ListTile(
+                                leading: Icon(IconsaxPlusLinear.copy),
+                                title: Text('Copy'),
+                              ),
                             ),
                           ),
                         ),
                         const PopupMenuDivider(),
-                        const PopupMenuItem<MenuItem>(
+                        PopupMenuItem<MenuItem>(
                           value: MenuItem.share,
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10),
-                            child: ListTile(
-                              leading: Icon(IconsaxPlusLinear.send_2),
-                              title: Text('Share'),
+                          child:  Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: SizedBox(
+                              height: menuHeight,
+                              child: const ListTile(
+                                leading: Icon(IconsaxPlusLinear.send_2),
+                                title: Text('Share'),
+                              ),
                             ),
                           ),
                         ),
                         const PopupMenuDivider(),
-                        const PopupMenuItem<MenuItem>(
+                        PopupMenuItem<MenuItem>(
                           value: MenuItem.pdf,
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10),
-                            child: ListTile(
-                              leading: Icon(IconsaxPlusLinear.document_text),
-                              title: Text('Export to PDF'),
+                          child:  Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: SizedBox(
+                              height: menuHeight,
+                              child: const ListTile(
+                                leading: Icon(IconsaxPlusLinear.document_text),
+                                title: Text('Export PDF'),
+                              ),
                             ),
                           ),
                         ),
                         const PopupMenuDivider(),
-                        const PopupMenuItem<MenuItem>(
+                        PopupMenuItem<MenuItem>(
                           value: MenuItem.txt,
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10),
-                            child: ListTile(
-                              leading: Icon(IconsaxPlusLinear.note_text),
-                              title: Text('Export to TXT'),
+                          child:  Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: SizedBox(
+                              height: menuHeight + 30,
+                              child: const ListTile(
+                                leading: Icon(IconsaxPlusLinear.note_text),
+                                title: Text('Export Text'),
+                              ),
                             ),
                           ),
                         ),
