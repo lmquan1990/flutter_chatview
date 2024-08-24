@@ -197,7 +197,6 @@ class _TextMessageViewState extends State<TextMessageView> {
                           color: Colors.white,
                           fontSize: FontSize(18),
                         )
-
                       },
                     ),
               Wrap(
@@ -242,10 +241,10 @@ class _TextMessageViewState extends State<TextMessageView> {
                     width: 30,
                     child: PopupMenuButton<MenuItem>(
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(10),
                         side: const BorderSide(
-                          width: 0,
-                          color: Colors.transparent,
+                          width: 1,
+                          color: Colors.white,
                         ),
                       ),
                       icon: const Icon(
@@ -396,6 +395,7 @@ class _TextMessageViewState extends State<TextMessageView> {
                             ),
                           ),
                         ),
+                        const PopupMenuDivider(),
                         const PopupMenuItem<MenuItem>(
                           value: MenuItem.pdf,
                           child: Padding(
