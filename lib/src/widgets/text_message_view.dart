@@ -244,7 +244,7 @@ class _TextMessageViewState extends State<TextMessageView> {
                         borderRadius: BorderRadius.circular(10),
                         side: const BorderSide(
                           width: 1,
-                          color: Colors.white,
+                          color: Colors.white24,
                         ),
                       ),
                       icon: const Icon(
