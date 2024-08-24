@@ -243,8 +243,8 @@ class _TextMessageViewState extends State<TextMessageView> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                         side: const BorderSide(
-                          width: 1,
-                          color: Colors.white24,
+                          width: 0,
+                          color: Colors.transparent,
                         ),
                       ),
                       icon: const Icon(
