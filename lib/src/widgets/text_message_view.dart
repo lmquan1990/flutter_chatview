@@ -28,6 +28,7 @@ import 'package:flutter/material.dart';
 import 'package:chatview/src/extensions/extensions.dart';
 import 'package:chatview/src/models/models.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:markdown/markdown.dart' as md;
@@ -141,7 +142,6 @@ class _TextMessageViewState extends State<TextMessageView> {
     final textMessage = widget.message.message;
     FlutterTts flutterTts = FlutterTts();
     bool isSharePopupShown = false;
-    // double menuHeight = 30;
 
     return Stack(
       clipBehavior: Clip.none,
@@ -178,13 +178,27 @@ class _TextMessageViewState extends State<TextMessageView> {
                       linkPreviewConfig: _linkPreviewConfig,
                       url: textMessage,
                     )
-                  : Text(
-                      textMessage,
-                      style: _textStyle ??
-                          textTheme.bodyMedium!.copyWith(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
+                  // : Text(
+                  //     textMessage,
+                  //     style: _textStyle ??
+                  //         textTheme.bodyMedium!.copyWith(
+                  //           color: Colors.white,
+                  //           fontSize: 16,
+                  //         ),
+                  //   ),
+                  : Html(
+                      data: md.markdownToHtml(textMessage),
+                      style: {
+                        'p': Style(
+                          color: Colors.white,
+                          fontSize: FontSize(16),
+                        ),
+                        'h2': Style(
+                          color: Colors.white,
+                          fontSize: FontSize(18),
+                        )
+
+                      },
                     ),
               Wrap(
                 crossAxisAlignment: WrapCrossAlignment.center,
