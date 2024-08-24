@@ -241,7 +241,7 @@ class _TextMessageViewState extends State<TextMessageView> {
                     width: 30,
                     child: PopupMenuButton<MenuItem>(
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(20),
                         side: const BorderSide(
                           width: 0,
                           color: Colors.transparent,
@@ -395,7 +395,6 @@ class _TextMessageViewState extends State<TextMessageView> {
                             ),
                           ),
                         ),
-                        const PopupMenuDivider(),
                         const PopupMenuItem<MenuItem>(
                           value: MenuItem.pdf,
                           child: Padding(
