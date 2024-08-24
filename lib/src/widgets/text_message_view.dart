@@ -228,7 +228,7 @@ class _TextMessageViewState extends State<TextMessageView> {
                     width: 30,
                     child: PopupMenuButton<MenuItem>(
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(20),
                         side: const BorderSide(
                           width: 0,
                           color: Colors.transparent,
