@@ -100,9 +100,9 @@ class _TextMessageViewState extends State<TextMessageView> {
       ? widget.outgoingChatBubbleConfig?.linkPreviewConfig
       : widget.inComingChatBubbleConfig?.linkPreviewConfig;
 
-  TextStyle? get _textStyle => widget.isMessageBySender
-      ? widget.outgoingChatBubbleConfig?.textStyle
-      : widget.inComingChatBubbleConfig?.textStyle;
+  // TextStyle? get _textStyle => widget.isMessageBySender
+  //     ? widget.outgoingChatBubbleConfig?.textStyle
+  //     : widget.inComingChatBubbleConfig?.textStyle;
 
   BorderRadiusGeometry _borderRadius(String message) => widget.isMessageBySender
       ? widget.outgoingChatBubbleConfig?.borderRadius ??
@@ -166,9 +166,13 @@ class _TextMessageViewState extends State<TextMessageView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                widget.message.sentBy == '1' ? 'You' : 'Gemini AI',
-                style: const TextStyle(color: Colors.blueAccent, fontSize: 15),
+              Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: Text(
+                  widget.message.sentBy == '1' ? 'You' : 'Gemini AI',
+                  style:
+                      const TextStyle(color: Colors.blueAccent, fontSize: 15),
+                ),
               ),
               const SizedBox(
                 height: 5,
@@ -178,14 +182,6 @@ class _TextMessageViewState extends State<TextMessageView> {
                       linkPreviewConfig: _linkPreviewConfig,
                       url: textMessage,
                     )
-                  // : Text(
-                  //     textMessage,
-                  //     style: _textStyle ??
-                  //         textTheme.bodyMedium!.copyWith(
-                  //           color: Colors.white,
-                  //           fontSize: 16,
-                  //         ),
-                  //   ),
                   : Html(
                       data: md.markdownToHtml(textMessage),
                       style: {
@@ -217,232 +213,241 @@ class _TextMessageViewState extends State<TextMessageView> {
                         )
                       },
                     ),
-              Wrap(
-                crossAxisAlignment: WrapCrossAlignment.center,
-                alignment: WrapAlignment.start,
-                children: [
-                  Text(
-                    formatDateTime(widget.message.createdAt),
-                    style: const TextStyle(fontSize: 12, color: Colors.white70),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  SizedBox(
-                    width: 30,
-                    child: IconButton(
-                        splashColor: Colors.transparent,
-                        hoverColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        onPressed: () async {
-                          if (Provider.of<Speaking>(context, listen: false)
-                              .speaking) {
-                            context.read<Speaking>().changeSpeaking(false);
-                            await flutterTts.stop();
-                          } else {
-                            context.read<Speaking>().changeSpeaking(true);
-                            await flutterTts.awaitSpeakCompletion(true);
-                            await flutterTts.speak(textMessage);
-                            if (context.mounted) {
+              Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  alignment: WrapAlignment.start,
+                  children: [
+                    Text(
+                      formatDateTime(widget.message.createdAt),
+                      style:
+                          const TextStyle(fontSize: 12, color: Colors.white70),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    SizedBox(
+                      width: 30,
+                      child: IconButton(
+                          splashColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onPressed: () async {
+                            if (Provider.of<Speaking>(context, listen: false)
+                                .speaking) {
                               context.read<Speaking>().changeSpeaking(false);
+                              await flutterTts.stop();
+                            } else {
+                              context.read<Speaking>().changeSpeaking(true);
+                              await flutterTts.awaitSpeakCompletion(true);
+                              await flutterTts.speak(textMessage);
+                              if (context.mounted) {
+                                context.read<Speaking>().changeSpeaking(false);
+                              }
+                            }
+                          },
+                          icon: Icon(
+                              context.watch<Speaking>().speaking
+                                  ? IconsaxPlusLinear.pause
+                                  : IconsaxPlusLinear.volume_high,
+                              size: 20,
+                              color: Colors.white70)),
+                    ),
+                    SizedBox(
+                      width: 30,
+                      child: PopupMenuButton<MenuItem>(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          side: const BorderSide(
+                            width: 0,
+                            color: Colors.transparent,
+                          ),
+                        ),
+                        icon: const Icon(
+                          IconsaxPlusLinear.more,
+                          size: 20,
+                          color: Colors.white70,
+                        ),
+                        onSelected: (MenuItem item) async {
+                          if (item == MenuItem.copy) {
+                            Clipboard.setData(ClipboardData(text: textMessage));
+                          } else if (item == MenuItem.share) {
+                            if (!isSharePopupShown) {
+                              isSharePopupShown = true;
+                              await Share.share(
+                                textMessage,
+                              ).whenComplete(() {
+                                Timer(
+                                    const Duration(
+                                      milliseconds: 600,
+                                    ), () {
+                                  isSharePopupShown = false;
+                                });
+                              });
+                            }
+                          } else if (item == MenuItem.pdf) {
+                            final newpdf = html2pdf.Document();
+                            List<html2pdf.Widget> widgets =
+                                await html2pdf.HTMLToPdf()
+                                    .convert(md.markdownToHtml(textMessage));
+                            newpdf.addPage(html2pdf.MultiPage(
+                                maxPages: 200,
+                                build: (context) {
+                                  return widgets;
+                                }));
+
+                            if (await FileStorage.writePdf(await newpdf.save(),
+                                "NakamaAI_${DateFormat('yyyyMMddmmhhss').format(DateTime.now())}.pdf")) {
+                              toastification.show(
+                                context: context.mounted ? context : null,
+                                type: ToastificationType.success,
+                                style: ToastificationStyle.fillColored,
+                                primaryColor: Colors.green,
+                                title: const Text(
+                                  'Info',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                                description: const Text(
+                                  'File has been downloaded to the Download folder.',
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                                alignment: Alignment.bottomCenter,
+                                autoCloseDuration: const Duration(seconds: 3),
+                              );
+                            } else {
+                              toastification.show(
+                                context: context.mounted ? context : null,
+                                type: ToastificationType.error,
+                                style: ToastificationStyle.fillColored,
+                                primaryColor: Colors.red,
+                                title: const Text(
+                                  'Error',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                                description: const Text(
+                                  'The app does not have permission to save files.',
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                                alignment: Alignment.bottomCenter,
+                                autoCloseDuration: const Duration(seconds: 3),
+                              );
+                            }
+
+                            //Web
+                            // var savedFile = await pdf.save();
+                            // List<int> fileInts = List.from(savedFile);
+                            // web.HTMLAnchorElement()
+                            //   ..href = "data:application/octet-stream;charset=utf-16le;base64,${base64.encode(fileInts)}"
+                            //   ..setAttribute("download", "${DateTime.now().millisecondsSinceEpoch}.pdf")
+                            //   ..click();
+                          } else if (item == MenuItem.txt) {
+                            if (await FileStorage.writeTxt(textMessage,
+                                "NakamaAI_${DateFormat('yyyyMMddmmhhss').format(DateTime.now())}.txt")) {
+                              toastification.show(
+                                context: context.mounted ? context : null,
+                                type: ToastificationType.success,
+                                style: ToastificationStyle.fillColored,
+                                primaryColor: Colors.green,
+                                title: const Text(
+                                  'Info',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                                description: const Text(
+                                  'File has been downloaded to the Download folder.',
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                                alignment: Alignment.bottomCenter,
+                                autoCloseDuration: const Duration(seconds: 3),
+                              );
+                            } else {
+                              toastification.show(
+                                context: context.mounted ? context : null,
+                                type: ToastificationType.error,
+                                style: ToastificationStyle.fillColored,
+                                primaryColor: Colors.red,
+                                title: const Text(
+                                  'Error',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                                description: const Text(
+                                  'The app does not have permission to save files.',
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                                alignment: Alignment.bottomCenter,
+                                autoCloseDuration: const Duration(seconds: 3),
+                              );
                             }
                           }
                         },
-                        icon: Icon(
-                            context.watch<Speaking>().speaking
-                                ? IconsaxPlusLinear.pause
-                                : IconsaxPlusLinear.volume_high,
-                            size: 20,
-                            color: Colors.white70)),
-                  ),
-                  SizedBox(
-                    width: 30,
-                    child: PopupMenuButton<MenuItem>(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        side: const BorderSide(
-                          width: 0,
-                          color: Colors.transparent,
-                        ),
+                        itemBuilder: (BuildContext context) =>
+                            <PopupMenuEntry<MenuItem>>[
+                          const PopupMenuItem<MenuItem>(
+                            value: MenuItem.copy,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child: SizedBox(
+                                // height: menuHeight,
+                                child: ListTile(
+                                  leading: Icon(IconsaxPlusLinear.copy),
+                                  title: Text('Copy'),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const PopupMenuItem<MenuItem>(
+                            value: MenuItem.share,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child: SizedBox(
+                                // height: menuHeight,
+                                child: ListTile(
+                                  leading: Icon(IconsaxPlusLinear.send_2),
+                                  title: Text('Share'),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const PopupMenuItem<MenuItem>(
+                            value: MenuItem.pdf,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child: SizedBox(
+                                // height: menuHeight,
+                                child: ListTile(
+                                  leading:
+                                      Icon(IconsaxPlusLinear.document_text),
+                                  title: Text('Export PDF'),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const PopupMenuItem<MenuItem>(
+                            value: MenuItem.txt,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child: SizedBox(
+                                // height: menuHeight,
+                                child: ListTile(
+                                  leading: Icon(IconsaxPlusLinear.note_text),
+                                  title: Text('Export Text'),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      icon: const Icon(
-                        IconsaxPlusLinear.more,
-                        size: 20,
-                        color: Colors.white70,
-                      ),
-                      onSelected: (MenuItem item) async {
-                        if (item == MenuItem.copy) {
-                          Clipboard.setData(ClipboardData(text: textMessage));
-                        } else if (item == MenuItem.share) {
-                          if (!isSharePopupShown) {
-                            isSharePopupShown = true;
-                            await Share.share(
-                              textMessage,
-                            ).whenComplete(() {
-                              Timer(
-                                  const Duration(
-                                    milliseconds: 600,
-                                  ), () {
-                                isSharePopupShown = false;
-                              });
-                            });
-                          }
-                        } else if (item == MenuItem.pdf) {
-                          final newpdf = html2pdf.Document();
-                          List<html2pdf.Widget> widgets =
-                              await html2pdf.HTMLToPdf()
-                                  .convert(md.markdownToHtml(textMessage));
-                          newpdf.addPage(html2pdf.MultiPage(
-                              maxPages: 200,
-                              build: (context) {
-                                return widgets;
-                              }));
-
-                          if (await FileStorage.writePdf(await newpdf.save(),
-                              "NakamaAI_${DateFormat('yyyyMMddmmhhss').format(DateTime.now())}.pdf")) {
-                            toastification.show(
-                              context: context.mounted ? context : null,
-                              type: ToastificationType.success,
-                              style: ToastificationStyle.fillColored,
-                              primaryColor: Colors.green,
-                              title: const Text(
-                                'Info',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 18),
-                              ),
-                              description: const Text(
-                                'File has been downloaded to the Download folder.',
-                                style: TextStyle(fontSize: 18),
-                              ),
-                              alignment: Alignment.bottomCenter,
-                              autoCloseDuration: const Duration(seconds: 3),
-                            );
-                          } else {
-                            toastification.show(
-                              context: context.mounted ? context : null,
-                              type: ToastificationType.error,
-                              style: ToastificationStyle.fillColored,
-                              primaryColor: Colors.red,
-                              title: const Text(
-                                'Error',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 18),
-                              ),
-                              description: const Text(
-                                'The app does not have permission to save files.',
-                                style: TextStyle(fontSize: 18),
-                              ),
-                              alignment: Alignment.bottomCenter,
-                              autoCloseDuration: const Duration(seconds: 3),
-                            );
-                          }
-
-                          //Web
-                          // var savedFile = await pdf.save();
-                          // List<int> fileInts = List.from(savedFile);
-                          // web.HTMLAnchorElement()
-                          //   ..href = "data:application/octet-stream;charset=utf-16le;base64,${base64.encode(fileInts)}"
-                          //   ..setAttribute("download", "${DateTime.now().millisecondsSinceEpoch}.pdf")
-                          //   ..click();
-                        } else if (item == MenuItem.txt) {
-                          if (await FileStorage.writeTxt(textMessage,
-                              "NakamaAI_${DateFormat('yyyyMMddmmhhss').format(DateTime.now())}.txt")) {
-                            toastification.show(
-                              context: context.mounted ? context : null,
-                              type: ToastificationType.success,
-                              style: ToastificationStyle.fillColored,
-                              primaryColor: Colors.green,
-                              title: const Text(
-                                'Info',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 18),
-                              ),
-                              description: const Text(
-                                'File has been downloaded to the Download folder.',
-                                style: TextStyle(fontSize: 18),
-                              ),
-                              alignment: Alignment.bottomCenter,
-                              autoCloseDuration: const Duration(seconds: 3),
-                            );
-                          } else {
-                            toastification.show(
-                              context: context.mounted ? context : null,
-                              type: ToastificationType.error,
-                              style: ToastificationStyle.fillColored,
-                              primaryColor: Colors.red,
-                              title: const Text(
-                                'Error',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 18),
-                              ),
-                              description: const Text(
-                                'The app does not have permission to save files.',
-                                style: TextStyle(fontSize: 18),
-                              ),
-                              alignment: Alignment.bottomCenter,
-                              autoCloseDuration: const Duration(seconds: 3),
-                            );
-                          }
-                        }
-                      },
-                      itemBuilder: (BuildContext context) =>
-                          <PopupMenuEntry<MenuItem>>[
-                        const PopupMenuItem<MenuItem>(
-                          value: MenuItem.copy,
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10),
-                            child: SizedBox(
-                              // height: menuHeight,
-                              child: ListTile(
-                                leading: Icon(IconsaxPlusLinear.copy),
-                                title: Text('Copy'),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const PopupMenuItem<MenuItem>(
-                          value: MenuItem.share,
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10),
-                            child: SizedBox(
-                              // height: menuHeight,
-                              child: ListTile(
-                                leading: Icon(IconsaxPlusLinear.send_2),
-                                title: Text('Share'),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const PopupMenuItem<MenuItem>(
-                          value: MenuItem.pdf,
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10),
-                            child: SizedBox(
-                              // height: menuHeight,
-                              child: ListTile(
-                                leading: Icon(IconsaxPlusLinear.document_text),
-                                title: Text('Export PDF'),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const PopupMenuItem<MenuItem>(
-                          value: MenuItem.txt,
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10),
-                            child: SizedBox(
-                              // height: menuHeight,
-                              child: ListTile(
-                                leading: Icon(IconsaxPlusLinear.note_text),
-                                title: Text('Export Text'),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),
