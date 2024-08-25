@@ -143,20 +143,6 @@ class _TextMessageViewState extends State<TextMessageView> {
     FlutterTts flutterTts = FlutterTts();
     bool isSharePopupShown = false;
 
-    final txtTest = '''This is a Stack Overflow forum post about how to copy files to an Android emulator instance. 
-
-The post details several methods for copying files to an Android emulator instance, including:
-
-1. **Drag and drop** - This is the simplest method and involves dragging a file from your computer to the emulator window. It will copy the file to the /sdcard/Download folder.
-2. **Android Device Monitor (DDMS)** - This is an older tool that was part of Android Studio. It provides a graphical interface for managing files on the emulator.
-3. **ADB (Android Debug Bridge)** - ADB is a command-line tool that provides a more powerful way to manage files on the emulator. It can be used to push and pull files between your computer and the emulator.
-4. **Device File Explorer** - This is a new tool in Android Studio that provides a more user-friendly interface for managing files on the emulator.
-
-The post also discusses several issues that can occur when copying files to an Android emulator instance, such as permission errors and the need to specify the target emulator when using ADB.
-
-Finally, the post provides a PowerShell script that can be used to automate the process of uploading and downloading files to and from an Android emulator instance.
-''';
-
     return Stack(
       clipBehavior: Clip.none,
       children: [
@@ -201,7 +187,7 @@ Finally, the post provides a PowerShell script that can be used to automate the 
                   //         ),
                   //   ),
                   : Html(
-                      data: md.markdownToHtml(txtTest),
+                      data: md.markdownToHtml(textMessage),
                       style: {
                         'p': Style(
                           color: Colors.white,
