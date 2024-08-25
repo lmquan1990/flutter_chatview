@@ -166,14 +166,14 @@ class _TextMessageViewState extends State<TextMessageView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 8),
-                child: Text(
-                  widget.message.sentBy == '1' ? 'You' : 'Gemini AI',
-                  style:
-                      const TextStyle(color: Colors.blueAccent, fontSize: 15),
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.only(left: 8),
+              //   child: Text(
+              //     widget.message.sentBy == '1' ? 'You' : 'Gemini AI',
+              //     style:
+              //         const TextStyle(color: Colors.blueAccent, fontSize: 15),
+              //   ),
+              // ),
               // const SizedBox(
               //   height: 5,
               // ),
