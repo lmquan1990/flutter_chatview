@@ -154,7 +154,7 @@ class _TextMessageViewState extends State<TextMessageView> {
           padding: _padding ??
               const EdgeInsets.symmetric(
                 horizontal: 12,
-                vertical: 10,
+                // vertical: 10,
               ),
           margin: _margin ??
               EdgeInsets.fromLTRB(5, 0, 6,
@@ -174,9 +174,9 @@ class _TextMessageViewState extends State<TextMessageView> {
                       const TextStyle(color: Colors.blueAccent, fontSize: 15),
                 ),
               ),
-              const SizedBox(
-                height: 5,
-              ),
+              // const SizedBox(
+              //   height: 5,
+              // ),
               textMessage.isUrl
                   ? LinkPreview(
                       linkPreviewConfig: _linkPreviewConfig,
