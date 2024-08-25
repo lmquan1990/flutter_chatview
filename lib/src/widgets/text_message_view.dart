@@ -138,7 +138,7 @@ class _TextMessageViewState extends State<TextMessageView> {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    // final textTheme = Theme.of(context).textTheme;
     final textMessage = widget.message.message;
     FlutterTts flutterTts = FlutterTts();
     bool isSharePopupShown = false;
@@ -196,6 +196,18 @@ class _TextMessageViewState extends State<TextMessageView> {
                         'h2': Style(
                           color: Colors.white,
                           fontSize: FontSize(18),
+                        ),
+                        'ul': Style(
+                          color: Colors.white,
+                          fontSize: FontSize(16),
+                          alignment: Alignment.topLeft,
+                          padding: HtmlPaddings.only(left: 15),
+                        ),
+                        'li': Style(
+                          color: Colors.white,
+                          fontSize: FontSize(16),
+                          alignment: Alignment.topLeft,
+                          padding: HtmlPaddings.only(left: 5),
                         )
                       },
                     ),
