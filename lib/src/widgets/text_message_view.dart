@@ -31,7 +31,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:intl/intl.dart';
-import 'package:markdown/markdown.dart' as md;
+import 'package:markdown/markdown.dart' as markdown;
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:toastification/toastification.dart';
@@ -115,17 +115,17 @@ class _TextMessageViewState extends State<TextMessageView> {
       : widget.inComingChatBubbleConfig?.color ?? Colors.grey.shade500;
 
   String formatDateTimeChatScreen(DateTime inputTime) {
-// Format as "Yesterday at 11:34 PM"
+    // Format as "Yesterday at 11:34 PM"
     String formattedDate =
         "${DateFormat.yMMMMd().format(inputTime)} at ${DateFormat.jm().format(inputTime)}";
 
-// Format as "Today at 11:34 PM"
+    // Format as "Today at 11:34 PM"
     if (DateFormat.yMMMMd().format(inputTime) ==
         DateFormat.yMMMMd().format(DateTime.now())) {
       formattedDate = "Today at ${DateFormat.jm().format(inputTime)}";
     }
 
-// Format as "11:34 PM"
+    // Format as "11:34 PM"
     if (DateFormat.yMMMMd().format(inputTime) ==
             DateFormat.yMMMMd().format(DateTime.now()) &&
         inputTime.hour >= 12) {
@@ -175,7 +175,7 @@ class _TextMessageViewState extends State<TextMessageView> {
                       url: textMessage,
                     )
                   : Html(
-                      data: md.markdownToHtml(textMessage),
+                      data: markdown.markdownToHtml(textMessage),
                       style: {
                         'p': Style(
                           color: Colors.white,
@@ -282,7 +282,7 @@ class _TextMessageViewState extends State<TextMessageView> {
                             final newpdf = html2pdf.Document();
                             List<html2pdf.Widget> widgets =
                                 await html2pdf.HTMLToPdf()
-                                    .convert(md.markdownToHtml(textMessage));
+                                    .convert(markdown.markdownToHtml(textMessage));
                             newpdf.addPage(html2pdf.MultiPage(
                                 maxPages: 200,
                                 build: (context) {
