@@ -100,10 +100,6 @@ class _TextMessageViewState extends State<TextMessageView> {
       ? widget.outgoingChatBubbleConfig?.linkPreviewConfig
       : widget.inComingChatBubbleConfig?.linkPreviewConfig;
 
-  // TextStyle? get _textStyle => widget.isMessageBySender
-  //     ? widget.outgoingChatBubbleConfig?.textStyle
-  //     : widget.inComingChatBubbleConfig?.textStyle;
-
   BorderRadiusGeometry _borderRadius(String message) => widget.isMessageBySender
       ? widget.outgoingChatBubbleConfig?.borderRadius ??
           (message.length < 37
@@ -118,17 +114,24 @@ class _TextMessageViewState extends State<TextMessageView> {
       ? widget.outgoingChatBubbleConfig?.color ?? Colors.purple
       : widget.inComingChatBubbleConfig?.color ?? Colors.grey.shade500;
 
-  String formatDateTime(DateTime dateTime) {
-    final now = DateTime.now();
-    final isToday = dateTime.year == now.year &&
-        dateTime.month == now.month &&
-        dateTime.day == now.day;
-    final isYesterday =
-        dateTime.isBefore(now) && dateTime.difference(now).inDays == 1;
+  String formatDateTimeChatScreen(DateTime inputTime) {
+// Format as "Yesterday at 11:34 PM"
+    String formattedDate =
+        "${DateFormat.yMMMMd().format(inputTime)} at ${DateFormat.jm().format(inputTime)}";
 
-    return DateFormat(
-            isToday ? 'HH:mm' : (isYesterday ? 'MMM/dd HH:mm' : 'MMM/dd HH:mm'))
-        .format(dateTime);
+// Format as "Today at 11:34 PM"
+    if (DateFormat.yMMMMd().format(inputTime) ==
+        DateFormat.yMMMMd().format(DateTime.now())) {
+      formattedDate = "Today at ${DateFormat.jm().format(inputTime)}";
+    }
+
+// Format as "11:34 PM"
+    if (DateFormat.yMMMMd().format(inputTime) ==
+            DateFormat.yMMMMd().format(DateTime.now()) &&
+        inputTime.hour >= 12) {
+      formattedDate = DateFormat.jm().format(inputTime);
+    }
+    return formattedDate;
   }
 
   @override
@@ -166,17 +169,6 @@ class _TextMessageViewState extends State<TextMessageView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Padding(
-              //   padding: const EdgeInsets.only(left: 8),
-              //   child: Text(
-              //     widget.message.sentBy == '1' ? 'You' : 'Gemini AI',
-              //     style:
-              //         const TextStyle(color: Colors.blueAccent, fontSize: 15),
-              //   ),
-              // ),
-              // const SizedBox(
-              //   height: 5,
-              // ),
               textMessage.isUrl
                   ? LinkPreview(
                       linkPreviewConfig: _linkPreviewConfig,
@@ -220,7 +212,7 @@ class _TextMessageViewState extends State<TextMessageView> {
                   alignment: WrapAlignment.start,
                   children: [
                     Text(
-                      formatDateTime(widget.message.createdAt),
+                      formatDateTimeChatScreen(widget.message.createdAt),
                       style:
                           const TextStyle(fontSize: 12, color: Colors.white70),
                     ),
