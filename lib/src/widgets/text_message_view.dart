@@ -115,19 +115,15 @@ class _TextMessageViewState extends State<TextMessageView> {
       : widget.inComingChatBubbleConfig?.color ?? Colors.grey.shade500;
 
   bool isDateTimeThisWeek(DateTime dateTime) {
-    final now = DateTime.now();
+    final now = DateUtils.dateOnly(DateTime.now());
     final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
     final endOfWeek = startOfWeek.add(const Duration(days: 6));
-
 
     return dateTime.isAfter(startOfWeek) && dateTime.isBefore(endOfWeek);
   }
 
   String formatDateTime(DateTime dateTime) {
-    final now = DateTime.now();
-    final todayFormat = DateFormat.yMMMMd();
-
-    if (todayFormat.format(dateTime) == todayFormat.format(now)) {
+    if (DateUtils.isSameDay(dateTime, DateTime.now())) {
       return DateFormat('hh:mm').format(dateTime);
     } else if (isDateTimeThisWeek(dateTime)) {
       return DateFormat('E hh:mm').format(dateTime);
@@ -143,7 +139,6 @@ class _TextMessageViewState extends State<TextMessageView> {
 
   @override
   Widget build(BuildContext context) {
-    // final textTheme = Theme.of(context).textTheme;
     final textMessage = widget.message.message;
     FlutterTts flutterTts = FlutterTts();
     bool isSharePopupShown = false;
