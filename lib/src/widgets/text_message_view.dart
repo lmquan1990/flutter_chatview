@@ -31,7 +31,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:intl/intl.dart';
-import 'package:markdown/markdown.dart' as markdown;
+import 'package:markdown/markdown.dart' as md;
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:toastification/toastification.dart';
@@ -114,24 +114,26 @@ class _TextMessageViewState extends State<TextMessageView> {
       ? widget.outgoingChatBubbleConfig?.color ?? Colors.purple
       : widget.inComingChatBubbleConfig?.color ?? Colors.grey.shade500;
 
-  String formatDateTimeChatScreen(DateTime inputTime) {
-    // Format as "Yesterday at 11:34 PM"
-    String formattedDate =
-        "${DateFormat.yMMMMd().format(inputTime)} at ${DateFormat.jm().format(inputTime)}";
+  bool isDateTimeThisWeek(DateTime dateTime) {
+    final now = DateTime.now();
+    final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+    final endOfWeek = startOfWeek.add(const Duration(days: 6));
 
-    // Format as "Today at 11:34 PM"
-    if (DateFormat.yMMMMd().format(inputTime) ==
-        DateFormat.yMMMMd().format(DateTime.now())) {
-      formattedDate = "Today at ${DateFormat.jm().format(inputTime)}";
-    }
 
-    // Format as "11:34 PM"
-    if (DateFormat.yMMMMd().format(inputTime) ==
-            DateFormat.yMMMMd().format(DateTime.now()) &&
-        inputTime.hour >= 12) {
-      formattedDate = DateFormat.jm().format(inputTime);
+    return dateTime.isAfter(startOfWeek) && dateTime.isBefore(endOfWeek);
+  }
+
+  String formatDateTime(DateTime dateTime) {
+    final now = DateTime.now();
+    final todayFormat = DateFormat.yMMMMd();
+
+    if (todayFormat.format(dateTime) == todayFormat.format(now)) {
+      return DateFormat('hh:mm').format(dateTime);
+    } else if (isDateTimeThisWeek(dateTime)) {
+      return DateFormat('E hh:mm').format(dateTime);
+    } else {
+      return DateFormat('hh:mm dd MM, yyyy').format(dateTime);
     }
-    return formattedDate;
   }
 
   @override
@@ -175,7 +177,7 @@ class _TextMessageViewState extends State<TextMessageView> {
                       url: textMessage,
                     )
                   : Html(
-                      data: markdown.markdownToHtml(textMessage),
+                      data: md.markdownToHtml(textMessage),
                       style: {
                         'p': Style(
                           color: Colors.white,
@@ -212,7 +214,7 @@ class _TextMessageViewState extends State<TextMessageView> {
                   alignment: WrapAlignment.start,
                   children: [
                     Text(
-                      formatDateTimeChatScreen(widget.message.createdAt),
+                      formatDateTime(widget.message.createdAt),
                       style:
                           const TextStyle(fontSize: 12, color: Colors.white70),
                     ),
@@ -282,7 +284,7 @@ class _TextMessageViewState extends State<TextMessageView> {
                             final newpdf = html2pdf.Document();
                             List<html2pdf.Widget> widgets =
                                 await html2pdf.HTMLToPdf()
-                                    .convert(markdown.markdownToHtml(textMessage));
+                                    .convert(md.markdownToHtml(textMessage));
                             newpdf.addPage(html2pdf.MultiPage(
                                 maxPages: 200,
                                 build: (context) {
