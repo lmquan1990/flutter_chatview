@@ -132,9 +132,9 @@ class _TextMessageViewState extends State<TextMessageView> {
     }
   }
 
-  bool containsMarkdown(String text) {
-    final markdownRegex = RegExp(
-        r"^\s*(#|\*|\-|\+|\>|\|\||```|~~|\[[^\]]*\]\([^)]*\)|!\[[^\]]*\]\([^)]*\))\s*");
+  bool hasMarkdown(String text) {
+    final markdownRegex =
+        RegExp(r"(\[[^\]]*\]\([^)]*\))|(#+.*)|(\*|\-|\+).*|(`.*`)|(>.*)");
     return markdownRegex.hasMatch(text);
   }
 
@@ -177,7 +177,7 @@ class _TextMessageViewState extends State<TextMessageView> {
                       linkPreviewConfig: _linkPreviewConfig,
                       url: textMessage,
                     )
-                  : containsMarkdown(textMessage)
+                  : hasMarkdown(textMessage)
                       ? Html(
                           data: md.markdownToHtml(textMessage),
                           style: {
@@ -210,9 +210,13 @@ class _TextMessageViewState extends State<TextMessageView> {
                             )
                           },
                         )
-                      : Text(
-                          textMessage,
-                          style: const TextStyle(color: Colors.white),
+                      : Padding(
+                          padding: const EdgeInsets.only(left: 10, top: 10),
+                          child: Text(
+                            textMessage,
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 16),
+                          ),
                         ),
               Padding(
                 padding: const EdgeInsets.only(left: 8),
