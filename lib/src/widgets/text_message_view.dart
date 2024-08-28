@@ -132,6 +132,12 @@ class _TextMessageViewState extends State<TextMessageView> {
     }
   }
 
+  bool containsMarkdown(String text) {
+    final markdownRegex = RegExp(
+        r"^\s*(#|\*|\-|\+|\>|\|\||```|~~|\[[^\]]*\]\([^)]*\)|!\[[^\]]*\]\([^)]*\))\s*");
+    return markdownRegex.hasMatch(text);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -171,37 +177,43 @@ class _TextMessageViewState extends State<TextMessageView> {
                       linkPreviewConfig: _linkPreviewConfig,
                       url: textMessage,
                     )
-                  : Html(
-                      data: md.markdownToHtml(textMessage),
-                      style: {
-                        'p': Style(
-                          color: Colors.white,
-                          fontSize: FontSize(16),
-                        ),
-                        'h2': Style(
-                          color: Colors.white,
-                          fontSize: FontSize(18),
-                        ),
-                        'ul': Style(
-                          color: Colors.white,
-                          fontSize: FontSize(16),
-                          alignment: Alignment.topLeft,
-                          padding: HtmlPaddings.only(left: 15),
-                        ),
-                        'ol': Style(
-                          color: Colors.white,
-                          fontSize: FontSize(16),
-                          alignment: Alignment.topLeft,
-                          padding: HtmlPaddings.only(left: 20),
-                        ),
-                        'li': Style(
-                          color: Colors.white,
-                          fontSize: FontSize(16),
-                          alignment: Alignment.topLeft,
-                          padding: HtmlPaddings.only(left: 5),
+                  : containsMarkdown(textMessage)
+                      ? Html(
+                          data: md.markdownToHtml(textMessage),
+                          style: {
+                            'p': Style(
+                              color: Colors.white,
+                              fontSize: FontSize(16),
+                              display: Display.inlineBlock,
+                            ),
+                            'h2': Style(
+                              color: Colors.white,
+                              fontSize: FontSize(18),
+                            ),
+                            'ul': Style(
+                              color: Colors.white,
+                              fontSize: FontSize(16),
+                              alignment: Alignment.topLeft,
+                              padding: HtmlPaddings.only(left: 15),
+                            ),
+                            'ol': Style(
+                              color: Colors.white,
+                              fontSize: FontSize(16),
+                              alignment: Alignment.topLeft,
+                              padding: HtmlPaddings.only(left: 20),
+                            ),
+                            'li': Style(
+                              color: Colors.white,
+                              fontSize: FontSize(16),
+                              alignment: Alignment.topLeft,
+                              padding: HtmlPaddings.only(left: 5),
+                            )
+                          },
                         )
-                      },
-                    ),
+                      : Text(
+                          textMessage,
+                          style: const TextStyle(color: Colors.white),
+                        ),
               Padding(
                 padding: const EdgeInsets.only(left: 8),
                 child: Wrap(

@@ -123,7 +123,7 @@ class _ChatListWidgetState extends State<ChatListWidget>
                 height: Scaffold.of(context).appBarMaxHeight,
                 child: Center(
                   child:
-                      widget.loadingWidget ?? const CircularProgressIndicator(),
+                  widget.loadingWidget ?? const CircularProgressIndicator(),
                 ),
               );
             } else {
@@ -141,7 +141,7 @@ class _ChatListWidgetState extends State<ChatListWidget>
                     showPopUp: showPopupValue,
                     scrollController: scrollController,
                     isEnableSwipeToSeeTime:
-                        featureActiveConfig?.enableSwipeToSeeTime ?? true,
+                    featureActiveConfig?.enableSwipeToSeeTime ?? true,
                     assignReplyMessage: widget.assignReplyMessage,
                     replyMessage: widget.replyMessage,
                     onChatBubbleLongPress: (yCoordinate, xCoordinate, message) {
@@ -175,7 +175,7 @@ class _ChatListWidgetState extends State<ChatListWidget>
   void _pagination() {
     if (widget.loadMoreData == null || widget.isLastPage == true) return;
     if ((scrollController.position.pixels ==
-            scrollController.position.maxScrollExtent) &&
+        scrollController.position.maxScrollExtent) &&
         !_isNextPageLoading.value) {
       _isNextPageLoading.value = true;
       widget.loadMoreData!()
@@ -197,39 +197,39 @@ class _ChatListWidgetState extends State<ChatListWidget>
           content: replyPopup?.replyPopupBuilder != null
               ? replyPopup!.replyPopupBuilder!(message, sentByCurrentUser)
               : ReplyPopupWidget(
-                  buttonTextStyle: replyPopup?.buttonTextStyle,
-                  topBorderColor: replyPopup?.topBorderColor,
-                  onMoreTap: () {
-                    _onChatListTap();
-                    replyPopup?.onMoreTap?.call(
-                      message,
-                      sentByCurrentUser,
-                    );
-                  },
-                  onReportTap: () {
-                    _onChatListTap();
-                    replyPopup?.onReportTap?.call(
-                      message,
-                    );
-                  },
-                  onUnsendTap: () {
-                    _onChatListTap();
-                    replyPopup?.onUnsendTap?.call(
-                      message,
-                    );
-                  },
-                  onReplyTap: () {
-                    widget.assignReplyMessage(message);
-                    if (featureActiveConfig?.enableReactionPopup ?? false) {
-                      chatViewIW?.showPopUp.value = false;
-                    }
-                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                    if (replyPopup?.onReplyTap != null) {
-                      replyPopup?.onReplyTap!(message);
-                    }
-                  },
-                  sentByCurrentUser: sentByCurrentUser,
-                ),
+            buttonTextStyle: replyPopup?.buttonTextStyle,
+            topBorderColor: replyPopup?.topBorderColor,
+            onMoreTap: () {
+              _onChatListTap();
+              replyPopup?.onMoreTap?.call(
+                message,
+                sentByCurrentUser,
+              );
+            },
+            onReportTap: () {
+              _onChatListTap();
+              replyPopup?.onReportTap?.call(
+                message,
+              );
+            },
+            onUnsendTap: () {
+              _onChatListTap();
+              replyPopup?.onUnsendTap?.call(
+                message,
+              );
+            },
+            onReplyTap: () {
+              widget.assignReplyMessage(message);
+              if (featureActiveConfig?.enableReactionPopup ?? false) {
+                chatViewIW?.showPopUp.value = false;
+              }
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              if (replyPopup?.onReplyTap != null) {
+                replyPopup?.onReplyTap!(message);
+              }
+            },
+            sentByCurrentUser: sentByCurrentUser,
+          ),
           padding: EdgeInsets.zero,
         ),
       ).closed;
@@ -246,7 +246,7 @@ class _ChatListWidgetState extends State<ChatListWidget>
 
   @override
   void dispose() {
-    chatViewIW?.chatController.messageStreamController.close();
+    chatController.messageStreamController.close();
     scrollController.dispose();
     _isNextPageLoading.dispose();
     super.dispose();
