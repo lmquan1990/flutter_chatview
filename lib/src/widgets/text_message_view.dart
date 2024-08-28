@@ -124,11 +124,11 @@ class _TextMessageViewState extends State<TextMessageView> {
 
   String formatDateTime(DateTime dateTime) {
     if (DateUtils.isSameDay(dateTime, DateTime.now())) {
-      return DateFormat('hh:mm').format(dateTime);
+      return DateFormat('HH:mm').format(dateTime);
     } else if (isDateTimeThisWeek(dateTime)) {
-      return DateFormat('E hh:mm').format(dateTime);
+      return DateFormat('E HH:mm').format(dateTime);
     } else {
-      return DateFormat('hh:mm dd MM, yyyy').format(dateTime);
+      return DateFormat('HH:mm dd MM, yyyy').format(dateTime);
     }
   }
 
