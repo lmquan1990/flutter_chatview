@@ -31,7 +31,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:intl/intl.dart';
-import 'package:markdown/markdown.dart' as md;
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:toastification/toastification.dart';
@@ -132,12 +131,6 @@ class _TextMessageViewState extends State<TextMessageView> {
     }
   }
 
-  bool hasMarkdown(String text) {
-    final markdownRegex =
-        RegExp(r"(\[[^\]]*\]\([^)]*\))|(#+.*)|(\*|\-|\+).*|(`.*`)|(>.*)");
-    return markdownRegex.hasMatch(text);
-  }
-
   @override
   void initState() {
     super.initState();
@@ -145,7 +138,9 @@ class _TextMessageViewState extends State<TextMessageView> {
 
   @override
   Widget build(BuildContext context) {
-    final textMessage = widget.message.message;
+    final textMessage = widget.message.message
+        .replaceAll('```html\n', '')
+        .replaceAll('\n```', '');
     FlutterTts flutterTts = FlutterTts();
     bool isSharePopupShown = false;
 
@@ -177,9 +172,17 @@ class _TextMessageViewState extends State<TextMessageView> {
                       linkPreviewConfig: _linkPreviewConfig,
                       url: textMessage,
                     )
-                  : hasMarkdown(textMessage)
-                      ? Html(
-                          data: md.markdownToHtml(textMessage),
+                  : widget.isMessageBySender
+                      ? Padding(
+                          padding: const EdgeInsets.only(left: 10, top: 10),
+                          child: Text(
+                            textMessage,
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 16),
+                          ),
+                        )
+                      : Html(
+                          data: textMessage,
                           style: {
                             'p': Style(
                               color: Colors.white,
@@ -209,14 +212,6 @@ class _TextMessageViewState extends State<TextMessageView> {
                               padding: HtmlPaddings.only(left: 5),
                             )
                           },
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.only(left: 10, top: 10),
-                          child: Text(
-                            textMessage,
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 16),
-                          ),
                         ),
               Padding(
                 padding: const EdgeInsets.only(left: 8),
@@ -294,8 +289,7 @@ class _TextMessageViewState extends State<TextMessageView> {
                           } else if (item == MenuItem.pdf) {
                             final newpdf = html2pdf.Document();
                             List<html2pdf.Widget> widgets =
-                                await html2pdf.HTMLToPdf()
-                                    .convert(md.markdownToHtml(textMessage));
+                                await html2pdf.HTMLToPdf().convert(textMessage);
                             newpdf.addPage(html2pdf.MultiPage(
                                 maxPages: 200,
                                 build: (context) {
