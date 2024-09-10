@@ -193,6 +193,11 @@ class _TextMessageViewState extends State<TextMessageView> {
                               color: Colors.white,
                               fontSize: FontSize(18),
                             ),
+                            'h3': Style(
+                              color: Colors.white,
+                              fontSize: FontSize(16),
+                              fontWeight: FontWeight.bold,
+                            ),
                             'ul': Style(
                               color: Colors.white,
                               fontSize: FontSize(16),
