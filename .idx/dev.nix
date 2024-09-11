@@ -15,7 +15,7 @@
   ];
 
   # Sets environment variables in the workspace
-  env = {};
+  env = { };
   idx = {
     # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
     extensions = [
@@ -26,16 +26,26 @@
     previews = {
       enable = true;
       previews = {
-        # web = {
-        #   # Example: run "npm run dev" with PORT set to IDX's defined port for previews,
-        #   # and show it in IDX's web preview panel
-        #   command = ["npm" "run" "dev"];
-        #   manager = "web";
-        #   env = {
-        #     # Environment variables to set for your server
-        #     PORT = "$PORT";
-        #   };
-        # };
+        # The following object sets web previews
+        web = {
+          command = [
+            "npm"
+            "run"
+            "start"
+            "--"
+            "--port"
+            "$PORT"
+            "--host"
+            "0.0.0.0"
+            "--disable-host-check"
+          ];
+          manager = "web";
+        };
+        # The following object sets Android previews
+        # Note that this is supported only on FLutter workspaces
+        android = {
+          manager = "flutter";
+        };
       };
     };
 
