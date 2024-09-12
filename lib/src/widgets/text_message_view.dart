@@ -235,6 +235,7 @@ class _TextMessageViewState extends State<TextMessageView> {
                     SizedBox(
                       width: 30,
                       child: IconButton(
+                          tooltip: "Listen content",
                           splashColor: Colors.transparent,
                           hoverColor: Colors.transparent,
                           highlightColor: Colors.transparent,
@@ -255,7 +256,7 @@ class _TextMessageViewState extends State<TextMessageView> {
                           icon: Icon(
                               context.watch<Speaking>().speaking
                                   ? IconsaxPlusLinear.pause
-                                  : IconsaxPlusLinear.volume_high,
+                                  : IconsaxPlusLinear.sound,
                               size: 20,
                               color: Colors.white70)),
                     ),

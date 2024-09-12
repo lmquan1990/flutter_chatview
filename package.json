@@ -1,0 +1,15 @@
+{
+  "name": "flutter_chatview",
+  "version": "1.0.0",
+  "description": "![Banner](https://raw.githubusercontent.com/SimformSolutionsPvtLtd/flutter_chatview/main/preview/banner.png)",
+  "main": "index.js",
+  "directories": {
+    "example": "example",
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
