@@ -24,6 +24,7 @@ import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 import '../utils/constants/constants.dart';
 import '../values/enumeration.dart';
@@ -92,6 +93,18 @@ class ProfileImageWidget extends StatelessWidget {
             fit: BoxFit.cover,
             errorBuilder: assetImageErrorBuilder ?? _errorWidget,
           ),
+        ImageType.icon => imageUrl == '0'
+            ? const Icon(IconsaxPlusLinear.document_text, color: Colors.white)
+            : imageUrl == '1'
+                ? const Icon(IconsaxPlusLinear.global, color: Colors.white)
+                : imageUrl == '2'
+                    ? const Icon(IconsaxPlusLinear.video_square,
+                        color: Colors.white)
+                    : imageUrl == '3'
+                        ? const Icon(IconsaxPlusLinear.audio_square,
+                            color: Colors.white)
+                        : const Icon(IconsaxPlusLinear.image,
+                            color: Colors.white),
         _ => const SizedBox.shrink(),
       },
     );
