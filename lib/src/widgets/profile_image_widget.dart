@@ -93,20 +93,81 @@ class ProfileImageWidget extends StatelessWidget {
             fit: BoxFit.cover,
             errorBuilder: assetImageErrorBuilder ?? _errorWidget,
           ),
-        ImageType.icon => imageUrl == '0'
-            ? const Icon(IconsaxPlusLinear.document_text, color: Colors.white)
-            : imageUrl == '1'
-                ? const Icon(IconsaxPlusLinear.global, color: Colors.white)
-                : imageUrl == '2'
-                    ? const Icon(IconsaxPlusLinear.video_square,
-                        color: Colors.white)
-                    : imageUrl == '3'
-                        ? const Icon(IconsaxPlusLinear.audio_square,
-                            color: Colors.white)
-                        : const Icon(IconsaxPlusLinear.image,
-                            color: Colors.white),
+        ImageType.icon => circleAvatar(imageUrl!),
         _ => const SizedBox.shrink(),
       },
+    );
+  }
+
+  Widget circleAvatar(String imageUrl) {
+    return SizedBox(
+      height: 50,
+      width: 50,
+      child: Stack(
+        alignment: AlignmentDirectional.center,
+        children: <Widget>[
+          Positioned(
+            top: 0.0,
+            child: ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                shape: const CircleBorder(),
+                padding:
+                    const EdgeInsets.only(bottom: 8, left: 8, right: 8, top: 8),
+                backgroundColor: imageUrl == '0'
+                    ? const Color(0xFF5e4fa2)
+                    : imageUrl == '1'
+                        ? const Color(0xFF3288bd)
+                        : imageUrl == '2'
+                            ? const Color(0xFFabdda4)
+                            : imageUrl == '3'
+                                ? const Color(0xFFe6f598)
+                                : const Color(0xFFfee08b),
+                foregroundColor: Colors.red,
+              ),
+              child: imageUrl == '0'
+                  ? const Icon(
+                      IconsaxPlusLinear.document_text,
+                      color: Colors.white,
+                      size: 25,
+                    )
+                  : imageUrl == '1'
+                      ? const Icon(
+                          IconsaxPlusLinear.global,
+                          color: Colors.white,
+                          size: 25,
+                        )
+                      : imageUrl == '2'
+                          ? const Icon(
+                              IconsaxPlusLinear.video_square,
+                              color: Colors.white,
+                              size: 25,
+                            )
+                          : imageUrl == '3'
+                              ? const Icon(
+                                  IconsaxPlusLinear.audio_square,
+                                  color: Colors.white,
+                                  size: 25,
+                                )
+                              : const Icon(
+                                  IconsaxPlusLinear.image,
+                                  color: Colors.white,
+                                  size: 25,
+                                ),
+            ),
+          ), //Icon
+          const Positioned(
+            top: 30,
+            right: 2,
+            child: CircleAvatar(
+              radius: 6,
+              backgroundColor: Colors.green,
+              foregroundColor: Colors.white,
+              // child: Text('24'),
+            ), //CircularAvatar
+          ), //Positioned
+        ], //<Widget>[]
+      ),
     );
   }
 
