@@ -263,6 +263,20 @@ class _TextMessageViewState extends State<TextMessageView> {
                     ),
                     SizedBox(
                       width: 30,
+                      child: IconButton(
+                          tooltip: "Copy",
+                          splashColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onPressed: () {
+                            Clipboard.setData(ClipboardData(
+                                text: removeHtmlTags(textMessage)));
+                          },
+                          icon: const Icon(IconsaxPlusLinear.copy,
+                              size: 20, color: Colors.white70)),
+                    ),
+                    SizedBox(
+                      width: 30,
                       child: PopupMenuButton<MenuItem>(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
