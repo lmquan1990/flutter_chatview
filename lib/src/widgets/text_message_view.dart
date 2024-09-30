@@ -43,7 +43,8 @@ import 'package:share_plus/share_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:htmltopdfwidgets/htmltopdfwidgets.dart' as html2pdf;
 
-enum MenuItem { copy, share, pdf, txt }
+// enum MenuItem { copy, share, pdf, txt }
+enum MenuItem { share, pdf, txt }
 
 class TextMessageView extends StatefulWidget {
   const TextMessageView({
@@ -291,10 +292,11 @@ class _TextMessageViewState extends State<TextMessageView> {
                           color: Colors.white70,
                         ),
                         onSelected: (MenuItem item) async {
-                          if (item == MenuItem.copy) {
-                            Clipboard.setData(ClipboardData(
-                                text: removeHtmlTags(textMessage)));
-                          } else if (item == MenuItem.share) {
+                          // if (item == MenuItem.copy) {
+                          //   Clipboard.setData(ClipboardData(
+                          //       text: removeHtmlTags(textMessage)));
+                          // } else 
+                          if (item == MenuItem.share) {
                             if (!isSharePopupShown) {
                               isSharePopupShown = true;
                               await Share.share(
@@ -411,19 +413,19 @@ class _TextMessageViewState extends State<TextMessageView> {
                         },
                         itemBuilder: (BuildContext context) =>
                             <PopupMenuEntry<MenuItem>>[
-                          const PopupMenuItem<MenuItem>(
-                            value: MenuItem.copy,
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 10),
-                              child: SizedBox(
-                                // height: menuHeight,
-                                child: ListTile(
-                                  leading: Icon(IconsaxPlusLinear.copy),
-                                  title: Text('Copy'),
-                                ),
-                              ),
-                            ),
-                          ),
+                          // const PopupMenuItem<MenuItem>(
+                          //   value: MenuItem.copy,
+                          //   child: Padding(
+                          //     padding: EdgeInsets.only(left: 10),
+                          //     child: SizedBox(
+                          //       // height: menuHeight,
+                          //       child: ListTile(
+                          //         leading: Icon(IconsaxPlusLinear.copy),
+                          //         title: Text('Copy'),
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
                           const PopupMenuItem<MenuItem>(
                             value: MenuItem.share,
                             child: Padding(
