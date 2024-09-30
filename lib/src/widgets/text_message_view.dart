@@ -284,7 +284,7 @@ class _TextMessageViewState extends State<TextMessageView> {
                             if (!isSharePopupShown) {
                               isSharePopupShown = true;
                               await Share.share(
-                                textMessage,
+                                removeHtmlTags(textMessage),
                               ).whenComplete(() {
                                 Timer(
                                     const Duration(
