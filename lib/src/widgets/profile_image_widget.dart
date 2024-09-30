@@ -115,14 +115,14 @@ class ProfileImageWidget extends StatelessWidget {
                 padding:
                     const EdgeInsets.only(bottom: 8, left: 8, right: 8, top: 8),
                 backgroundColor: imageUrl == '0'
-                    ? const Color(0xFF5e4fa2)
+                    ? Colors.deepPurpleAccent
                     : imageUrl == '1'
-                        ? const Color(0xFF3288bd)
+                        ? Colors.blueAccent
                         : imageUrl == '2'
-                            ? const Color(0xFFabdda4)
+                            ? Colors.green
                             : imageUrl == '3'
-                                ? const Color(0xFFe6f598)
-                                : const Color(0xFFfee08b),
+                                ? Colors.orange
+                                : Colors.indigoAccent,
                 foregroundColor: Colors.red,
               ),
               child: imageUrl == '0'

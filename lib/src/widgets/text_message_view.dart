@@ -247,7 +247,8 @@ class _TextMessageViewState extends State<TextMessageView> {
                             } else {
                               context.read<Speaking>().changeSpeaking(true);
                               await flutterTts.awaitSpeakCompletion(true);
-                              await flutterTts.speak(textMessage);
+                              await flutterTts
+                                  .speak(removeHtmlTags(textMessage));
                               if (context.mounted) {
                                 context.read<Speaking>().changeSpeaking(false);
                               }
@@ -277,7 +278,8 @@ class _TextMessageViewState extends State<TextMessageView> {
                         ),
                         onSelected: (MenuItem item) async {
                           if (item == MenuItem.copy) {
-                            Clipboard.setData(ClipboardData(text: textMessage));
+                            Clipboard.setData(ClipboardData(
+                                text: removeHtmlTags(textMessage)));
                           } else if (item == MenuItem.share) {
                             if (!isSharePopupShown) {
                               isSharePopupShown = true;
@@ -467,6 +469,11 @@ class _TextMessageViewState extends State<TextMessageView> {
       ],
     );
   }
+}
+
+String removeHtmlTags(String text) {
+  final RegExp regex = RegExp(r'<[^>]*>');
+  return text.replaceAll(regex, '');
 }
 
 Future<String> getPath() async {
