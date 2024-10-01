@@ -120,6 +120,8 @@ class _TextMessageViewState extends State<TextMessageView> {
     return dateTime.isAfter(startOfWeek) && dateTime.isBefore(endOfWeek);
   }
 
+  String path = '';
+
   String formatDateTime(DateTime dateTime) {
     if (DateUtils.isSameDay(dateTime, DateTime.now())) {
       return DateFormat('HH:mm').format(dateTime);
@@ -143,7 +145,7 @@ class _TextMessageViewState extends State<TextMessageView> {
   Future<bool> writePdf(List<int> bytes, String name) async {
     try {
       final directory = await getApplicationDocumentsDirectory();
-      final path = '${directory.path}/$name';
+      path = '${directory.path}/$name';
       final file = File(path);
       await file.writeAsBytes(bytes);
       return true;
@@ -155,7 +157,7 @@ class _TextMessageViewState extends State<TextMessageView> {
   Future<bool> writeTxt(String text, String name) async {
     try {
       final directory = await getApplicationDocumentsDirectory();
-      final path = '${directory.path}/$name';
+      path = '${directory.path}/$name';
       File file = File(path);
       await file.writeAsString(text);
       return true;
@@ -356,9 +358,9 @@ class _TextMessageViewState extends State<TextMessageView> {
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18),
                                 ),
-                                description: const Text(
-                                  'File has been downloaded to the Download folder.',
-                                  style: TextStyle(fontSize: 18),
+                                description: Text(
+                                  'File has been exported to $path',
+                                  style: const TextStyle(fontSize: 18),
                                 ),
                                 alignment: Alignment.bottomCenter,
                                 autoCloseDuration: const Duration(seconds: 3),
@@ -405,9 +407,9 @@ class _TextMessageViewState extends State<TextMessageView> {
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18),
                                 ),
-                                description: const Text(
-                                  'File has been downloaded to the Download folder.',
-                                  style: TextStyle(fontSize: 18),
+                                description: Text(
+                                  'File has been exported to $path',
+                                  style: const TextStyle(fontSize: 18),
                                 ),
                                 alignment: Alignment.bottomCenter,
                                 autoCloseDuration: const Duration(seconds: 3),
