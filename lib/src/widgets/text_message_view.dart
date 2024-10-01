@@ -40,10 +40,8 @@ import 'link_preview.dart';
 import 'reaction_widget.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:htmltopdfwidgets/htmltopdfwidgets.dart' as html2pdf;
 
-// enum MenuItem { copy, share, pdf, txt }
 enum MenuItem { share, pdf, txt }
 
 class TextMessageView extends StatefulWidget {
@@ -135,6 +133,35 @@ class _TextMessageViewState extends State<TextMessageView> {
   @override
   void initState() {
     super.initState();
+  }
+
+  String removeHtmlTags(String text) {
+    final RegExp regex = RegExp(r'<[^>]*>');
+    return text.replaceAll(regex, '');
+  }
+
+  Future<bool> writePdf(List<int> bytes, String name) async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final path = '${directory.path}/$name';
+      final file = File(path);
+      await file.writeAsBytes(bytes);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> writeTxt(String text, String name) async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final path = '${directory.path}/$name';
+      File file = File(path);
+      await file.writeAsString(text);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   @override
@@ -292,10 +319,6 @@ class _TextMessageViewState extends State<TextMessageView> {
                           color: Colors.white70,
                         ),
                         onSelected: (MenuItem item) async {
-                          // if (item == MenuItem.copy) {
-                          //   Clipboard.setData(ClipboardData(
-                          //       text: removeHtmlTags(textMessage)));
-                          // } else 
                           if (item == MenuItem.share) {
                             if (!isSharePopupShown) {
                               isSharePopupShown = true;
@@ -320,7 +343,7 @@ class _TextMessageViewState extends State<TextMessageView> {
                                   return widgets;
                                 }));
 
-                            if (await FileStorage.writePdf(await newpdf.save(),
+                            if (await writePdf(await newpdf.save(),
                                 "NakamaAI_${DateFormat('yyyyMMddmmhhss').format(DateTime.now())}.pdf")) {
                               toastification.show(
                                 context: context.mounted ? context : null,
@@ -369,7 +392,7 @@ class _TextMessageViewState extends State<TextMessageView> {
                             //   ..setAttribute("download", "${DateTime.now().millisecondsSinceEpoch}.pdf")
                             //   ..click();
                           } else if (item == MenuItem.txt) {
-                            if (await FileStorage.writeTxt(textMessage,
+                            if (await writeTxt(textMessage,
                                 "NakamaAI_${DateFormat('yyyyMMddmmhhss').format(DateTime.now())}.txt")) {
                               toastification.show(
                                 context: context.mounted ? context : null,
@@ -413,19 +436,6 @@ class _TextMessageViewState extends State<TextMessageView> {
                         },
                         itemBuilder: (BuildContext context) =>
                             <PopupMenuEntry<MenuItem>>[
-                          // const PopupMenuItem<MenuItem>(
-                          //   value: MenuItem.copy,
-                          //   child: Padding(
-                          //     padding: EdgeInsets.only(left: 10),
-                          //     child: SizedBox(
-                          //       // height: menuHeight,
-                          //       child: ListTile(
-                          //         leading: Icon(IconsaxPlusLinear.copy),
-                          //         title: Text('Copy'),
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
                           const PopupMenuItem<MenuItem>(
                             value: MenuItem.share,
                             child: Padding(
@@ -484,82 +494,5 @@ class _TextMessageViewState extends State<TextMessageView> {
           ),
       ],
     );
-  }
-}
-
-String removeHtmlTags(String text) {
-  final RegExp regex = RegExp(r'<[^>]*>');
-  return text.replaceAll(regex, '');
-}
-
-Future<String> getPath() async {
-  // Permission granted, proceed with storage operations
-  Directory directory = Directory("");
-  if (Platform.isAndroid) {
-    // Redirects it to download folder in android
-    directory = Directory("/storage/emulated/0/Download");
-  } else {
-    directory = await getApplicationDocumentsDirectory();
-  }
-  final exPath = directory.path;
-  await Directory(exPath).create(recursive: true);
-  return exPath;
-}
-
-// To save the file in the device
-class FileStorage {
-  static Future<String> getExternalDocumentPath() async {
-    // To check whether permission is given for this app or not.
-    var status = await Permission.storage.status;
-
-    if (status.isGranted) {
-      return getPath();
-    } else if (status.isDenied) {
-      // Permission denied, request it
-      Map<Permission, PermissionStatus> statuses =
-          await [Permission.storage].request();
-      if (statuses[Permission.storage] == PermissionStatus.granted) {
-        return getPath();
-      } else {
-        // Permission denied even after request, handle accordingly
-      }
-    } else if (status.isPermanentlyDenied) {
-      // Permission permanently denied, guide user to app settings
-      openAppSettings();
-    }
-    return '';
-  }
-
-  static Future<String> get _localPath async {
-    // final directory = await getApplicationDocumentsDirectory();
-    // return directory.path;
-    // To get the external path from device of download folder
-    final String directory = await getExternalDocumentPath();
-    return directory;
-  }
-
-  static Future<bool> writeTxt(String text, String name) async {
-    final path = await _localPath;
-    if (path != '') {
-      File file = File('$path/$name');
-      await file.writeAsString(text);
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  static Future<bool> writePdf(List<int> bytes, String name) async {
-    final path = await _localPath;
-    // Create a file for the path of
-    // device and file name with extension
-    if (path != '') {
-      File file = File('$path/$name');
-      // Write the data in the file you have created
-      await file.writeAsBytes(bytes);
-      return true;
-    } else {
-      return false;
-    }
   }
 }
