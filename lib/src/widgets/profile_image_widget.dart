@@ -99,7 +99,7 @@ class ProfileImageWidget extends StatelessWidget {
     );
   }
 
-  Widget circleAvatar(String imageUrl) {
+  Widget circleAvatar(String fileType) {
     return SizedBox(
       height: 50,
       width: 50,
@@ -114,36 +114,36 @@ class ProfileImageWidget extends StatelessWidget {
                 shape: const CircleBorder(),
                 padding:
                     const EdgeInsets.only(bottom: 8, left: 8, right: 8, top: 8),
-                backgroundColor: imageUrl == '0'
+                backgroundColor: fileType == 'document'
                     ? Colors.deepPurpleAccent
-                    : imageUrl == '1'
+                    : fileType == 'web'
                         ? Colors.blueAccent
-                        : imageUrl == '2'
+                        : fileType == 'video'
                             ? Colors.green
-                            : imageUrl == '3'
+                            : fileType == 'audio'
                                 ? Colors.orange
                                 : Colors.indigoAccent,
                 foregroundColor: Colors.red,
               ),
-              child: imageUrl == '0'
+              child: fileType == 'document'
                   ? const Icon(
                       IconsaxPlusLinear.document_text,
                       color: Colors.white,
                       size: 25,
                     )
-                  : imageUrl == '1'
+                  : fileType == 'web'
                       ? const Icon(
                           IconsaxPlusLinear.global,
                           color: Colors.white,
                           size: 25,
                         )
-                      : imageUrl == '2'
+                      : fileType == 'video'
                           ? const Icon(
                               IconsaxPlusLinear.video_square,
                               color: Colors.white,
                               size: 25,
                             )
-                          : imageUrl == '3'
+                          : fileType == 'audio'
                               ? const Icon(
                                   IconsaxPlusLinear.audio_square,
                                   color: Colors.white,
