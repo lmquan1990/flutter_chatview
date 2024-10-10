@@ -378,7 +378,7 @@ class _TextMessageViewState extends State<TextMessageView> {
                                       fontSize: 18),
                                 ),
                                 description: const Text(
-                                  'The app does not have permission to save files.',
+                                  'Unable to export file.',
                                   style: TextStyle(fontSize: 18),
                                 ),
                                 alignment: Alignment.bottomCenter,
