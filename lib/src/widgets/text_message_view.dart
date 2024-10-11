@@ -352,7 +352,7 @@ class _TextMessageViewState extends State<TextMessageView> {
                                   toastLength: Toast.LENGTH_SHORT,
                                   gravity: ToastGravity.BOTTOM,
                                   timeInSecForIosWeb: 1,
-                                  backgroundColor: Colors.green,
+                                  backgroundColor: Colors.green.withOpacity(0.8),
                                   textColor: Colors.white,
                                   fontSize: 16.0);
                             } else {
@@ -361,7 +361,7 @@ class _TextMessageViewState extends State<TextMessageView> {
                                   toastLength: Toast.LENGTH_SHORT,
                                   gravity: ToastGravity.BOTTOM,
                                   timeInSecForIosWeb: 1,
-                                  backgroundColor: Colors.red,
+                                  backgroundColor: Colors.red.withOpacity(0.8),
                                   textColor: Colors.white,
                                   fontSize: 16.0);
                             }
@@ -381,7 +381,7 @@ class _TextMessageViewState extends State<TextMessageView> {
                                   toastLength: Toast.LENGTH_SHORT,
                                   gravity: ToastGravity.BOTTOM,
                                   timeInSecForIosWeb: 1,
-                                  backgroundColor: Colors.green,
+                                  backgroundColor: Colors.green.withOpacity(0.8),
                                   textColor: Colors.white,
                                   fontSize: 16.0);
                             } else {
@@ -391,7 +391,7 @@ class _TextMessageViewState extends State<TextMessageView> {
                                   toastLength: Toast.LENGTH_SHORT,
                                   gravity: ToastGravity.BOTTOM,
                                   timeInSecForIosWeb: 1,
-                                  backgroundColor: Colors.red,
+                                  backgroundColor: Colors.red.withOpacity(0.8),
                                   textColor: Colors.white,
                                   fontSize: 16.0);
                             }
