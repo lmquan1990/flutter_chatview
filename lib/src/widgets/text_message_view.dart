@@ -29,11 +29,11 @@ import 'package:chatview/src/extensions/extensions.dart';
 import 'package:chatview/src/models/models.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:toastification/toastification.dart';
 
 import '../utils/constants/constants.dart';
 import 'link_preview.dart';
@@ -347,43 +347,23 @@ class _TextMessageViewState extends State<TextMessageView> {
 
                             if (await writePdf(await newpdf.save(),
                                 "NakamaAI_${DateFormat('yyyyMMddmmhhss').format(DateTime.now())}.pdf")) {
-                              toastification.show(
-                                context: context.mounted ? context : null,
-                                type: ToastificationType.success,
-                                style: ToastificationStyle.fillColored,
-                                primaryColor: Colors.green,
-                                title: const Text(
-                                  'Info',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18),
-                                ),
-                                description: Text(
-                                  'File has been exported to $path',
-                                  style: const TextStyle(fontSize: 18),
-                                ),
-                                alignment: Alignment.bottomCenter,
-                                autoCloseDuration: const Duration(seconds: 3),
-                              );
+                              Fluttertoast.showToast(
+                                  msg: "File has been exported to $path",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.CENTER,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.green,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0);
                             } else {
-                              toastification.show(
-                                context: context.mounted ? context : null,
-                                type: ToastificationType.error,
-                                style: ToastificationStyle.fillColored,
-                                primaryColor: Colors.red,
-                                title: const Text(
-                                  'Error',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18),
-                                ),
-                                description: const Text(
-                                  'Unable to export file.',
-                                  style: TextStyle(fontSize: 18),
-                                ),
-                                alignment: Alignment.bottomCenter,
-                                autoCloseDuration: const Duration(seconds: 3),
-                              );
+                              Fluttertoast.showToast(
+                                  msg: "Unable to export file.",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.CENTER,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.red,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0);
                             }
 
                             //Web
@@ -396,43 +376,24 @@ class _TextMessageViewState extends State<TextMessageView> {
                           } else if (item == MenuItem.txt) {
                             if (await writeTxt(textMessage,
                                 "NakamaAI_${DateFormat('yyyyMMddmmhhss').format(DateTime.now())}.txt")) {
-                              toastification.show(
-                                context: context.mounted ? context : null,
-                                type: ToastificationType.success,
-                                style: ToastificationStyle.fillColored,
-                                primaryColor: Colors.green,
-                                title: const Text(
-                                  'Info',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18),
-                                ),
-                                description: Text(
-                                  'File has been exported to $path',
-                                  style: const TextStyle(fontSize: 18),
-                                ),
-                                alignment: Alignment.bottomCenter,
-                                autoCloseDuration: const Duration(seconds: 3),
-                              );
+                              Fluttertoast.showToast(
+                                  msg: "File has been exported to $path",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.CENTER,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.green,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0);
                             } else {
-                              toastification.show(
-                                context: context.mounted ? context : null,
-                                type: ToastificationType.error,
-                                style: ToastificationStyle.fillColored,
-                                primaryColor: Colors.red,
-                                title: const Text(
-                                  'Error',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18),
-                                ),
-                                description: const Text(
-                                  'The app does not have permission to save files.',
-                                  style: TextStyle(fontSize: 18),
-                                ),
-                                alignment: Alignment.bottomCenter,
-                                autoCloseDuration: const Duration(seconds: 3),
-                              );
+                              Fluttertoast.showToast(
+                                  msg:
+                                      "The app does not have permission to save files.",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.CENTER,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.red,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0);
                             }
                           }
                         },
