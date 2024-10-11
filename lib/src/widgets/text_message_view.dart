@@ -350,7 +350,7 @@ class _TextMessageViewState extends State<TextMessageView> {
                               Fluttertoast.showToast(
                                   msg: "File has been exported to $path",
                                   toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.CENTER,
+                                  gravity: ToastGravity.BOTTOM,
                                   timeInSecForIosWeb: 1,
                                   backgroundColor: Colors.green,
                                   textColor: Colors.white,
@@ -359,7 +359,7 @@ class _TextMessageViewState extends State<TextMessageView> {
                               Fluttertoast.showToast(
                                   msg: "Unable to export file.",
                                   toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.CENTER,
+                                  gravity: ToastGravity.BOTTOM,
                                   timeInSecForIosWeb: 1,
                                   backgroundColor: Colors.red,
                                   textColor: Colors.white,
@@ -379,7 +379,7 @@ class _TextMessageViewState extends State<TextMessageView> {
                               Fluttertoast.showToast(
                                   msg: "File has been exported to $path",
                                   toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.CENTER,
+                                  gravity: ToastGravity.BOTTOM,
                                   timeInSecForIosWeb: 1,
                                   backgroundColor: Colors.green,
                                   textColor: Colors.white,
@@ -389,7 +389,7 @@ class _TextMessageViewState extends State<TextMessageView> {
                                   msg:
                                       "The app does not have permission to save files.",
                                   toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.CENTER,
+                                  gravity: ToastGravity.BOTTOM,
                                   timeInSecForIosWeb: 1,
                                   backgroundColor: Colors.red,
                                   textColor: Colors.white,
