@@ -55,6 +55,7 @@ class TextMessageView extends StatefulWidget {
     this.messageReactionConfig,
     this.highlightMessage = false,
     this.highlightColor,
+    this.displayName,
   }) : super(key: key);
 
   /// Represents current message is sent by current user.
@@ -80,6 +81,8 @@ class TextMessageView extends StatefulWidget {
 
   /// Allow user to set color of highlighted message.
   final Color? highlightColor;
+
+  final String? displayName;
 
   @override
   State<TextMessageView> createState() => _TextMessageViewState();
@@ -346,7 +349,7 @@ class _TextMessageViewState extends State<TextMessageView> {
                                 }));
 
                             if (await writePdf(await newpdf.save(),
-                                "NakamaAI_${DateFormat('yyyyMMddmmhhss').format(DateTime.now())}.pdf")) {
+                                '${widget.displayName}_${DateFormat('yyyy-MM-dd-hh-mm-ss').format(DateTime.now())}.pdf')) {
                               Fluttertoast.showToast(
                                   msg: "File has been exported to $path",
                                   toastLength: Toast.LENGTH_SHORT,
@@ -375,7 +378,7 @@ class _TextMessageViewState extends State<TextMessageView> {
                             //   ..click();
                           } else if (item == MenuItem.txt) {
                             if (await writeTxt(textMessage,
-                                "NakamaAI_${DateFormat('yyyyMMddmmhhss').format(DateTime.now())}.txt")) {
+                                '${widget.displayName}_${DateFormat('yyyy-MM-dd-hh-mm-ss').format(DateTime.now())}.txt')) {
                               Fluttertoast.showToast(
                                   msg: "File has been exported to $path",
                                   toastLength: Toast.LENGTH_SHORT,
