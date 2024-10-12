@@ -145,7 +145,7 @@ class _TextMessageViewState extends State<TextMessageView> {
   Future<bool> writePdf(List<int> bytes, String name) async {
     try {
       final directory = await getApplicationDocumentsDirectory();
-      path = '${directory.path}/$name';
+      path = '${directory.path}/app_storage/export/$name';
       final file = File(path);
       await file.writeAsBytes(bytes);
       return true;
@@ -157,7 +157,7 @@ class _TextMessageViewState extends State<TextMessageView> {
   Future<bool> writeTxt(String text, String name) async {
     try {
       final directory = await getApplicationDocumentsDirectory();
-      path = '${directory.path}/$name';
+      path = '${directory.path}/app_storage/export/$name';
       File file = File(path);
       await file.writeAsString(text);
       return true;
