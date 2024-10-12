@@ -48,6 +48,8 @@ class Message {
   /// Provides message type.
   final MessageType messageType;
 
+  final String? displayName;
+
   /// Status of the message.
   final ValueNotifier<MessageStatus> _status;
 
@@ -63,6 +65,7 @@ class Message {
     Reaction? reaction,
     this.messageType = MessageType.text,
     this.voiceMessageDuration,
+    this.displayName,
     MessageStatus status = MessageStatus.pending,
   })  : reaction = reaction ?? Reaction(reactions: [], reactedUserIds: []),
         key = GlobalKey(),
