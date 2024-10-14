@@ -230,7 +230,7 @@ class SendMessageWidgetState extends State<SendMessageWidget> {
                         ),
                         widget.messageConfig!.isReadOnly!
                             ? const ColoredBox(
-                                color: Color(0xFF494949),
+                                color: Color(0xFF3c3c3c),
                                 child: Padding(
                                   padding: EdgeInsets.only(
                                       left: 15, right: 15, top: 15, bottom: 10),
