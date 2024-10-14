@@ -230,7 +230,9 @@ class SendMessageWidgetState extends State<SendMessageWidget> {
                         ),
                         widget.messageConfig!.isReadOnly!
                             ? const Text(
-                                'This conversation is read-only because the file has been deleted.')
+                                'This conversation is read-only because the file has been deleted.',
+                                style: TextStyle(fontSize: 16),
+                              )
                             : ChatUITextField(
                                 focusNode: _focusNode,
                                 textEditingController: _textEditingController,
