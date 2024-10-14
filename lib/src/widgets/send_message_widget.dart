@@ -229,11 +229,14 @@ class SendMessageWidgetState extends State<SendMessageWidget> {
                           valueListenable: _replyMessage,
                         ),
                         widget.messageConfig!.isReadOnly!
-                            ? const Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 15),
-                                child: Text(
-                                  'This conversation is read-only because the file has been deleted.',
-                                  style: TextStyle(fontSize: 16),
+                            ? const ColoredBox(
+                                color: Color(0xFF161616),
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 15),
+                                  child: Text(
+                                    'This conversation is read-only because the file has been deleted.',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
                                 ),
                               )
                             : ChatUITextField(
