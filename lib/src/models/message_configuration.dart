@@ -44,6 +44,8 @@ class MessageConfiguration {
   /// To customize reply view for custom message type
   final CustomMessageReplyViewBuilder? customMessageReplyViewBuilder;
 
+  final bool? isReadOnly;
+
   const MessageConfiguration({
     this.imageMessageConfig,
     this.messageReactionConfig,
@@ -51,5 +53,6 @@ class MessageConfiguration {
     this.customMessageBuilder,
     this.voiceMessageConfig,
     this.customMessageReplyViewBuilder,
+    this.isReadOnly,
   });
 }

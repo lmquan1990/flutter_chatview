@@ -228,14 +228,17 @@ class SendMessageWidgetState extends State<SendMessageWidget> {
                           },
                           valueListenable: _replyMessage,
                         ),
-                        ChatUITextField(
-                          focusNode: _focusNode,
-                          textEditingController: _textEditingController,
-                          onPressed: _onPressed,
-                          sendMessageConfig: widget.sendMessageConfig,
-                          onRecordingComplete: _onRecordingComplete,
-                          onImageSelected: _onImageSelected,
-                        )
+                        widget.messageConfig!.isReadOnly!
+                            ? const Text(
+                                'This conversation is read-only because the file has been deleted.')
+                            : ChatUITextField(
+                                focusNode: _focusNode,
+                                textEditingController: _textEditingController,
+                                onPressed: _onPressed,
+                                sendMessageConfig: widget.sendMessageConfig,
+                                onRecordingComplete: _onRecordingComplete,
+                                onImageSelected: _onImageSelected,
+                              )
                       ],
                     ),
                   ),
