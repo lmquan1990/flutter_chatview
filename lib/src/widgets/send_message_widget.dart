@@ -230,10 +230,10 @@ class SendMessageWidgetState extends State<SendMessageWidget> {
                         ),
                         widget.messageConfig!.isReadOnly!
                             ? const ColoredBox(
-                                color: Color(0xFF161616),
+                                color: Color(0xFF494949),
                                 child: Padding(
                                   padding: EdgeInsets.only(
-                                      left: 15, right: 15, top: 10, bottom: 10),
+                                      left: 15, right: 15, top: 15, bottom: 10),
                                   child: Text(
                                     textAlign: TextAlign.center,
                                     'This conversation is read-only because the file has been deleted.',
