@@ -253,16 +253,20 @@ class SendMessageWidgetState extends State<SendMessageWidget> {
                                   ),
                                 ),
                               )
-                            : Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 5, right: 5, top: 10, bottom: 20),
-                                child: ChatUITextField(
-                                  focusNode: _focusNode,
-                                  textEditingController: _textEditingController,
-                                  onPressed: _onPressed,
-                                  sendMessageConfig: widget.sendMessageConfig,
-                                  onRecordingComplete: _onRecordingComplete,
-                                  onImageSelected: _onImageSelected,
+                            : ColoredBox(
+                                color: const Color(0xFF161616),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 5, right: 5, top: 10, bottom: 20),
+                                  child: ChatUITextField(
+                                    focusNode: _focusNode,
+                                    textEditingController:
+                                        _textEditingController,
+                                    onPressed: _onPressed,
+                                    sendMessageConfig: widget.sendMessageConfig,
+                                    onRecordingComplete: _onRecordingComplete,
+                                    onImageSelected: _onImageSelected,
+                                  ),
                                 ),
                               ),
                       ],
