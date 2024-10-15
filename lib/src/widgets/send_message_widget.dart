@@ -121,11 +121,17 @@ class SendMessageWidgetState extends State<SendMessageWidget> {
                   ),
                   Padding(
                     key: chatViewIW?.chatTextFieldViewKey,
+                    // padding: EdgeInsets.fromLTRB(
+                    //   bottomPadding4,
+                    //   bottomPadding4,
+                    //   bottomPadding4,
+                    //   _bottomPadding,
+                    // ),
                     padding: EdgeInsets.fromLTRB(
-                      bottomPadding4,
-                      bottomPadding4,
-                      bottomPadding4,
-                      _bottomPadding,
+                      0,
+                      0,
+                      0,
+                      0,
                     ),
                     child: Stack(
                       alignment: Alignment.bottomCenter,
@@ -151,11 +157,17 @@ class SendMessageWidgetState extends State<SendMessageWidget> {
                                       right: 0.4,
                                       left: 0.4,
                                     ),
+                                    // padding: const EdgeInsets.fromLTRB(
+                                    //   leftPadding,
+                                    //   leftPadding,
+                                    //   leftPadding,
+                                    //   30,
+                                    // ),
                                     padding: const EdgeInsets.fromLTRB(
-                                      leftPadding,
-                                      leftPadding,
-                                      leftPadding,
-                                      30,
+                                      0,
+                                      0,
+                                      0,
+                                      0,
                                     ),
                                     child: Container(
                                       margin: const EdgeInsets.only(bottom: 2),
@@ -230,7 +242,7 @@ class SendMessageWidgetState extends State<SendMessageWidget> {
                         ),
                         widget.messageConfig!.isReadOnly!
                             ? const ColoredBox(
-                                color: Color(0xFF3c3c3c),
+                                color: Color(0xFF2f2f2f),
                                 child: Padding(
                                   padding: EdgeInsets.only(
                                       left: 15, right: 15, top: 15, bottom: 10),
