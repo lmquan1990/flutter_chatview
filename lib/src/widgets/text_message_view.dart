@@ -336,35 +336,37 @@ class _TextMessageViewState extends State<TextMessageView> {
                               });
                             }
                           } else if (item == MenuItem.pdf) {
-                            final newpdf = html2pdf.Document();
-                            List<html2pdf.Widget> widgets =
-                                await html2pdf.HTMLToPdf().convert(textMessage);
-                            newpdf.addPage(html2pdf.MultiPage(
-                                maxPages: 200,
-                                build: (context) {
-                                  return widgets;
-                                }));
+                            widget.inComingChatBubbleConfig?.onExportMessage?.call(widget.message);
 
-                            if (await writePdf(await newpdf.save(),
-                                '${widget.message.displayName}_${DateFormat('yyyy-MM-dd-hh-mm-ss').format(DateTime.now())}.pdf')) {
-                              Fluttertoast.showToast(
-                                  msg: "File has been exported to $path",
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.BOTTOM,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor: Colors.green.withOpacity(0.8),
-                                  textColor: Colors.white,
-                                  fontSize: 16.0);
-                            } else {
-                              Fluttertoast.showToast(
-                                  msg: "Unable to export file.",
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.BOTTOM,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor: Colors.red.withOpacity(0.8),
-                                  textColor: Colors.white,
-                                  fontSize: 16.0);
-                            }
+                            // final newpdf = html2pdf.Document();
+                            // List<html2pdf.Widget> widgets =
+                            //     await html2pdf.HTMLToPdf().convert(textMessage);
+                            // newpdf.addPage(html2pdf.MultiPage(
+                            //     maxPages: 200,
+                            //     build: (context) {
+                            //       return widgets;
+                            //     }));
+
+                            // if (await writePdf(await newpdf.save(),
+                            //     '${widget.message.displayName}_${DateFormat('yyyy-MM-dd-hh-mm-ss').format(DateTime.now())}.pdf')) {
+                            //   Fluttertoast.showToast(
+                            //       msg: "File has been exported to $path",
+                            //       toastLength: Toast.LENGTH_SHORT,
+                            //       gravity: ToastGravity.BOTTOM,
+                            //       timeInSecForIosWeb: 1,
+                            //       backgroundColor: Colors.green.withOpacity(0.8),
+                            //       textColor: Colors.white,
+                            //       fontSize: 16.0);
+                            // } else {
+                            //   Fluttertoast.showToast(
+                            //       msg: "Unable to export file.",
+                            //       toastLength: Toast.LENGTH_SHORT,
+                            //       gravity: ToastGravity.BOTTOM,
+                            //       timeInSecForIosWeb: 1,
+                            //       backgroundColor: Colors.red.withOpacity(0.8),
+                            //       textColor: Colors.white,
+                            //       fontSize: 16.0);
+                            // }
 
                             //Web
                             // var savedFile = await pdf.save();
