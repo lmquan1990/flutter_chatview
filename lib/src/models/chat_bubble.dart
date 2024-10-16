@@ -52,6 +52,8 @@ class ChatBubble {
   /// time only
   final Function(Message message)? onMessageRead;
 
+  final Function(Message message)? onExportMessage;
+
   const ChatBubble({
     this.color,
     this.borderRadius,
@@ -62,5 +64,6 @@ class ChatBubble {
     this.senderNameTextStyle,
     this.receiptsWidgetConfig,
     this.onMessageRead,
+    this.onExportMessage,
   });
 }
