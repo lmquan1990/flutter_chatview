@@ -20,7 +20,6 @@
  * SOFTWARE.
  */
 import 'dart:async';
-import 'dart:io';
 
 import 'package:chatview/src/widgets/message_view.dart';
 import 'package:flutter/material.dart';
@@ -29,10 +28,8 @@ import 'package:chatview/src/extensions/extensions.dart';
 import 'package:chatview/src/models/models.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/constants/constants.dart';
@@ -40,7 +37,6 @@ import 'link_preview.dart';
 import 'reaction_widget.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:htmltopdfwidgets/htmltopdfwidgets.dart' as html2pdf;
 
 enum MenuItem { share, pdf, txt }
 
@@ -120,8 +116,6 @@ class _TextMessageViewState extends State<TextMessageView> {
     return dateTime.isAfter(startOfWeek) && dateTime.isBefore(endOfWeek);
   }
 
-  String path = '';
-
   String formatDateTime(DateTime dateTime) {
     if (DateUtils.isSameDay(dateTime, DateTime.now())) {
       return DateFormat('HH:mm').format(dateTime);
@@ -140,30 +134,6 @@ class _TextMessageViewState extends State<TextMessageView> {
   String removeHtmlTags(String text) {
     final RegExp regex = RegExp(r'<[^>]*>');
     return text.replaceAll(regex, '');
-  }
-
-  Future<bool> writePdf(List<int> bytes, String name) async {
-    try {
-      final directory = await getApplicationDocumentsDirectory();
-      path = '${directory.path}/app_storage/export/$name';
-      final file = File(path);
-      await file.writeAsBytes(bytes);
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  Future<bool> writeTxt(String text, String name) async {
-    try {
-      final directory = await getApplicationDocumentsDirectory();
-      path = '${directory.path}/app_storage/export/$name';
-      File file = File(path);
-      await file.writeAsString(text);
-      return true;
-    } catch (e) {
-      return false;
-    }
   }
 
   @override
@@ -336,37 +306,8 @@ class _TextMessageViewState extends State<TextMessageView> {
                               });
                             }
                           } else if (item == MenuItem.pdf) {
-                            widget.inComingChatBubbleConfig?.onExportMessage?.call(widget.message);
-
-                            // final newpdf = html2pdf.Document();
-                            // List<html2pdf.Widget> widgets =
-                            //     await html2pdf.HTMLToPdf().convert(textMessage);
-                            // newpdf.addPage(html2pdf.MultiPage(
-                            //     maxPages: 200,
-                            //     build: (context) {
-                            //       return widgets;
-                            //     }));
-
-                            // if (await writePdf(await newpdf.save(),
-                            //     '${widget.message.displayName}_${DateFormat('yyyy-MM-dd-hh-mm-ss').format(DateTime.now())}.pdf')) {
-                            //   Fluttertoast.showToast(
-                            //       msg: "File has been exported to $path",
-                            //       toastLength: Toast.LENGTH_SHORT,
-                            //       gravity: ToastGravity.BOTTOM,
-                            //       timeInSecForIosWeb: 1,
-                            //       backgroundColor: Colors.green.withOpacity(0.8),
-                            //       textColor: Colors.white,
-                            //       fontSize: 16.0);
-                            // } else {
-                            //   Fluttertoast.showToast(
-                            //       msg: "Unable to export file.",
-                            //       toastLength: Toast.LENGTH_SHORT,
-                            //       gravity: ToastGravity.BOTTOM,
-                            //       timeInSecForIosWeb: 1,
-                            //       backgroundColor: Colors.red.withOpacity(0.8),
-                            //       textColor: Colors.white,
-                            //       fontSize: 16.0);
-                            // }
+                            widget.inComingChatBubbleConfig?.onExportMessage
+                                ?.call(widget.message, 0);
 
                             //Web
                             // var savedFile = await pdf.save();
@@ -376,27 +317,8 @@ class _TextMessageViewState extends State<TextMessageView> {
                             //   ..setAttribute("download", "${DateTime.now().millisecondsSinceEpoch}.pdf")
                             //   ..click();
                           } else if (item == MenuItem.txt) {
-                            if (await writeTxt(textMessage,
-                                '${widget.message.displayName}_${DateFormat('yyyy-MM-dd-hh-mm-ss').format(DateTime.now())}.txt')) {
-                              Fluttertoast.showToast(
-                                  msg: "File has been exported to $path",
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.BOTTOM,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor: Colors.green.withOpacity(0.8),
-                                  textColor: Colors.white,
-                                  fontSize: 16.0);
-                            } else {
-                              Fluttertoast.showToast(
-                                  msg:
-                                      "The app does not have permission to save files.",
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.BOTTOM,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor: Colors.red.withOpacity(0.8),
-                                  textColor: Colors.white,
-                                  fontSize: 16.0);
-                            }
+                            widget.inComingChatBubbleConfig?.onExportMessage
+                                ?.call(widget.message, 1);
                           }
                         },
                         itemBuilder: (BuildContext context) =>

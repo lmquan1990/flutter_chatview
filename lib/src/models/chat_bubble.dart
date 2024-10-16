@@ -52,7 +52,8 @@ class ChatBubble {
   /// time only
   final Function(Message message)? onMessageRead;
 
-  final Function(Message message)? onExportMessage;
+  //type 0 pdf, 1 txt
+  final Function(Message message, int type)? onExportMessage;
 
   const ChatBubble({
     this.color,
