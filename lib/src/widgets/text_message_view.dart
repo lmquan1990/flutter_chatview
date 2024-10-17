@@ -275,97 +275,98 @@ class _TextMessageViewState extends State<TextMessageView> {
                           icon: const Icon(IconsaxPlusLinear.copy,
                               size: 20, color: Colors.white70)),
                     ),
-                    SizedBox(
-                      width: 30,
-                      child: PopupMenuButton<MenuItem>(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          side: const BorderSide(
-                            width: 0,
-                            color: Colors.transparent,
+                    if (widget.message.sentBy == '2')
+                      SizedBox(
+                        width: 30,
+                        child: PopupMenuButton<MenuItem>(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            side: const BorderSide(
+                              width: 0,
+                              color: Colors.transparent,
+                            ),
                           ),
-                        ),
-                        icon: const Icon(
-                          IconsaxPlusLinear.more,
-                          size: 20,
-                          color: Colors.white70,
-                        ),
-                        onSelected: (MenuItem item) async {
-                          if (item == MenuItem.share) {
-                            if (!isSharePopupShown) {
-                              isSharePopupShown = true;
-                              await Share.share(
-                                removeHtmlTags(textMessage),
-                              ).whenComplete(() {
-                                Timer(
-                                    const Duration(
-                                      milliseconds: 600,
-                                    ), () {
-                                  isSharePopupShown = false;
+                          icon: const Icon(
+                            IconsaxPlusLinear.more,
+                            size: 20,
+                            color: Colors.white70,
+                          ),
+                          onSelected: (MenuItem item) async {
+                            if (item == MenuItem.share) {
+                              if (!isSharePopupShown) {
+                                isSharePopupShown = true;
+                                await Share.share(
+                                  removeHtmlTags(textMessage),
+                                ).whenComplete(() {
+                                  Timer(
+                                      const Duration(
+                                        milliseconds: 600,
+                                      ), () {
+                                    isSharePopupShown = false;
+                                  });
                                 });
-                              });
-                            }
-                          } else if (item == MenuItem.pdf) {
-                            widget.inComingChatBubbleConfig?.onExportMessage
-                                ?.call(widget.message, 0);
+                              }
+                            } else if (item == MenuItem.pdf) {
+                              widget.inComingChatBubbleConfig?.onExportMessage
+                                  ?.call(widget.message, 0);
 
-                            //Web
-                            // var savedFile = await pdf.save();
-                            // List<int> fileInts = List.from(savedFile);
-                            // web.HTMLAnchorElement()
-                            //   ..href = "data:application/octet-stream;charset=utf-16le;base64,${base64.encode(fileInts)}"
-                            //   ..setAttribute("download", "${DateTime.now().millisecondsSinceEpoch}.pdf")
-                            //   ..click();
-                          } else if (item == MenuItem.txt) {
-                            widget.inComingChatBubbleConfig?.onExportMessage
-                                ?.call(widget.message, 1);
-                          }
-                        },
-                        itemBuilder: (BuildContext context) =>
-                            <PopupMenuEntry<MenuItem>>[
-                          const PopupMenuItem<MenuItem>(
-                            value: MenuItem.share,
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 10),
-                              child: SizedBox(
-                                // height: menuHeight,
-                                child: ListTile(
-                                  leading: Icon(IconsaxPlusLinear.send_2),
-                                  title: Text('Share'),
+                              //Web
+                              // var savedFile = await pdf.save();
+                              // List<int> fileInts = List.from(savedFile);
+                              // web.HTMLAnchorElement()
+                              //   ..href = "data:application/octet-stream;charset=utf-16le;base64,${base64.encode(fileInts)}"
+                              //   ..setAttribute("download", "${DateTime.now().millisecondsSinceEpoch}.pdf")
+                              //   ..click();
+                            } else if (item == MenuItem.txt) {
+                              widget.inComingChatBubbleConfig?.onExportMessage
+                                  ?.call(widget.message, 1);
+                            }
+                          },
+                          itemBuilder: (BuildContext context) =>
+                              <PopupMenuEntry<MenuItem>>[
+                            const PopupMenuItem<MenuItem>(
+                              value: MenuItem.share,
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 10),
+                                child: SizedBox(
+                                  // height: menuHeight,
+                                  child: ListTile(
+                                    leading: Icon(IconsaxPlusLinear.send_2),
+                                    title: Text('Share'),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          const PopupMenuItem<MenuItem>(
-                            value: MenuItem.pdf,
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 10),
-                              child: SizedBox(
-                                // height: menuHeight,
-                                child: ListTile(
-                                  leading:
-                                      Icon(IconsaxPlusLinear.document_text),
-                                  title: Text('Export PDF'),
+                            const PopupMenuItem<MenuItem>(
+                              value: MenuItem.pdf,
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 10),
+                                child: SizedBox(
+                                  // height: menuHeight,
+                                  child: ListTile(
+                                    leading:
+                                        Icon(IconsaxPlusLinear.document_text),
+                                    title: Text('Export PDF'),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          const PopupMenuItem<MenuItem>(
-                            value: MenuItem.txt,
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 10),
-                              child: SizedBox(
-                                // height: menuHeight,
-                                child: ListTile(
-                                  leading: Icon(IconsaxPlusLinear.note_text),
-                                  title: Text('Export Text'),
+                            const PopupMenuItem<MenuItem>(
+                              value: MenuItem.txt,
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 10),
+                                child: SizedBox(
+                                  // height: menuHeight,
+                                  child: ListTile(
+                                    leading: Icon(IconsaxPlusLinear.note_text),
+                                    title: Text('Export Text'),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ),
