@@ -22,15 +22,12 @@ dependencies:
   audio_waveforms: ^1.0.5
   # For formatting time locale in message receipts
   timeago: ^3.6.1
-  ionicons: ^0.2.2
   flutter_tts: ^4.0.2
   cached_network_image: ^3.3.1
   provider: ^6.1.2
   share_plus: ^10.0.2
   iconsax_plus: ^1.0.0
   path_provider: ^2.1.4
-  fluttertoast: ^8.2.8
-  htmltopdfwidgets: ^1.0.3
   flutter_html: ^3.0.0-beta.2
   flutter_keyboard_visibility: ^6.0.0
 
