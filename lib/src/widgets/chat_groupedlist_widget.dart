@@ -250,16 +250,6 @@ class _ChatGroupedListWidgetState extends State<ChatGroupedListWidget>
     super.dispose();
   }
 
-  void scrollToItem(int index) {
-    _scrollController.animateTo(
-      index * 1,
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-    );
-  }
-
-  final ScrollController _scrollController = ScrollController();
-
   Widget get _chatStreamBuilder {
     DateTime lastMatchedDate = DateTime.now();
     return StreamBuilder<List<Message>>(
@@ -292,12 +282,7 @@ class _ChatGroupedListWidgetState extends State<ChatGroupedListWidget>
           /// needs to be display in chat
           var count = 0;
 
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            scrollToItem(0);
-          });
-
           return ListView.builder(
-            controller: _scrollController,
             key: widget.key,
             physics: const NeverScrollableScrollPhysics(),
             padding: EdgeInsets.zero,
