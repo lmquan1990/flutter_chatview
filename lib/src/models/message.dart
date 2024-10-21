@@ -68,8 +68,7 @@ class Message {
     this.displayName,
     MessageStatus status = MessageStatus.pending,
   })  : reaction = reaction ?? Reaction(reactions: [], reactedUserIds: []),
-        // key = GlobalKey(),
-        key = GlobalObjectKey(id),
+        key = GlobalKey(),
         _status = ValueNotifier(status),
         assert(
           (messageType.isVoice
