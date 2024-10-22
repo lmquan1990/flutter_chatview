@@ -24,7 +24,7 @@ import 'package:chatview/src/extensions/extensions.dart';
 import 'package:chatview/src/widgets/suggestions/suggestion_list.dart';
 import 'package:chatview/src/widgets/type_indicator_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+// import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import 'chat_bubble_widget.dart';
 import 'chat_group_header.dart';
@@ -283,27 +283,28 @@ class _ChatGroupedListWidgetState extends State<ChatGroupedListWidget>
           /// needs to be display in chat
           var count = 0;
 
-          final ItemScrollController itemScrollController =
-              ItemScrollController();
-          final ScrollOffsetController scrollOffsetController =
-              ScrollOffsetController();
-          final ItemPositionsListener itemPositionsListener =
-              ItemPositionsListener.create();
-          final ScrollOffsetListener scrollOffsetListener =
-              ScrollOffsetListener.create();
+          // final ItemScrollController itemScrollController =
+          //     ItemScrollController();
+          // final ScrollOffsetController scrollOffsetController =
+          //     ScrollOffsetController();
+          // final ItemPositionsListener itemPositionsListener =
+          //     ItemPositionsListener.create();
+          // final ScrollOffsetListener scrollOffsetListener =
+          //     ScrollOffsetListener.create();
 
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            itemScrollController.scrollTo(
-                index: 0,
-                duration: Duration(seconds: 2),
-                curve: Curves.easeInOutCubic);
-          });
+          // WidgetsBinding.instance.addPostFrameCallback((_) {
+          //   itemScrollController.scrollTo(
+          //       index: 0,
+          //       duration: Duration(seconds: 2),
+          //       curve: Curves.easeInOutCubic);
+          // });
 
-          return ScrollablePositionedList.builder(
-            itemScrollController: itemScrollController,
-            scrollOffsetController: scrollOffsetController,
-            itemPositionsListener: itemPositionsListener,
-            scrollOffsetListener: scrollOffsetListener,
+          // return ScrollablePositionedList.builder(
+            return ListView.builder(
+            // itemScrollController: itemScrollController,
+            // scrollOffsetController: scrollOffsetController,
+            // itemPositionsListener: itemPositionsListener,
+            // scrollOffsetListener: scrollOffsetListener,
             key: widget.key,
             physics: const NeverScrollableScrollPhysics(),
             padding: EdgeInsets.zero,
