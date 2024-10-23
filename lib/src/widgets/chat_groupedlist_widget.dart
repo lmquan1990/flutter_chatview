@@ -87,12 +87,20 @@ class _ChatGroupedListWidgetState extends State<ChatGroupedListWidget>
       chatListConfig.chatBackgroundConfig;
 
   double chatTextFieldHeight = 0;
+  List<Message>? lstMessage;
 
   @override
   void initState() {
     super.initState();
     _initializeAnimation();
     updateChatTextFieldHeight();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await Future.delayed(const Duration(seconds: 1));
+      if (chatController!.scrollMessageId != null &&
+          chatController!.scrollMessageId!.isNotEmpty) {
+        _onReplyTap(chatController!.scrollMessageId!, lstMessage);
+      }
+    });
   }
 
   @override
@@ -266,6 +274,8 @@ class _ChatGroupedListWidgetState extends State<ChatGroupedListWidget>
               ? sortMessage(snapshot.data!)
               : snapshot.data!;
 
+          lstMessage = snapshot.data;
+
           final enableSeparator =
               featureActiveConfig?.enableChatSeparator ?? false;
 
@@ -283,28 +293,7 @@ class _ChatGroupedListWidgetState extends State<ChatGroupedListWidget>
           /// needs to be display in chat
           var count = 0;
 
-          // final ItemScrollController itemScrollController =
-          //     ItemScrollController();
-          // final ScrollOffsetController scrollOffsetController =
-          //     ScrollOffsetController();
-          // final ItemPositionsListener itemPositionsListener =
-          //     ItemPositionsListener.create();
-          // final ScrollOffsetListener scrollOffsetListener =
-          //     ScrollOffsetListener.create();
-
-          // WidgetsBinding.instance.addPostFrameCallback((_) {
-          //   itemScrollController.scrollTo(
-          //       index: 0,
-          //       duration: Duration(seconds: 2),
-          //       curve: Curves.easeInOutCubic);
-          // });
-
-          // return ScrollablePositionedList.builder(
-            return ListView.builder(
-            // itemScrollController: itemScrollController,
-            // scrollOffsetController: scrollOffsetController,
-            // itemPositionsListener: itemPositionsListener,
-            // scrollOffsetListener: scrollOffsetListener,
+          return ListView.builder(
             key: widget.key,
             physics: const NeverScrollableScrollPhysics(),
             padding: EdgeInsets.zero,

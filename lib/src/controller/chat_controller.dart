@@ -74,11 +74,14 @@ class ChatController {
   /// Provides current user which is sending messages.
   final ChatUser currentUser;
 
+  final String? scrollMessageId;
+
   ChatController({
     required this.initialMessageList,
     required this.scrollController,
     required this.otherUsers,
     required this.currentUser,
+    this.scrollMessageId,
   });
 
   /// Represents message stream of chat
