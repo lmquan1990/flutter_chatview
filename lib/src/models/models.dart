@@ -45,3 +45,4 @@ export 'suggestion_item_data.dart';
 export 'reply_suggestions_config.dart';
 export 'suggestion_list_config.dart';
 export 'suggestion_item_config.dart';
+export 'scroll_to_bottom_button_config.dart';

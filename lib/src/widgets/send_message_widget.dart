@@ -28,6 +28,7 @@ import 'package:chatview/src/widgets/chatui_textfield.dart';
 import 'package:chatview/src/widgets/reply_message_view.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:chatview/src/widgets/scroll_to_bottom_button.dart';
 
 import '../utils/constants/constants.dart';
 
@@ -96,6 +97,8 @@ class SendMessageWidgetState extends State<SendMessageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final scrollToBottomButtonConfig =
+        chatListConfig.scrollToBottomButtonConfig;
     return Align(
       alignment: Alignment.bottomCenter,
       child: widget.sendMessageBuilder != null
@@ -119,6 +122,19 @@ class SendMessageWidgetState extends State<SendMessageWidget> {
                               Colors.white,
                     ),
                   ),
+                  if (chatViewIW
+                          ?.featureActiveConfig.enableScrollToBottomButton ??
+                      true)
+                    Align(
+                      alignment:
+                          scrollToBottomButtonConfig?.alignment?.alignment ??
+                              Alignment.bottomCenter,
+                      child: Padding(
+                        padding: scrollToBottomButtonConfig?.padding ??
+                            EdgeInsets.zero,
+                        child: const ScrollToBottomButton(),
+                      ),
+                    ),
                   Padding(
                     key: chatViewIW?.chatTextFieldViewKey,
                     // padding: EdgeInsets.fromLTRB(
@@ -127,7 +143,7 @@ class SendMessageWidgetState extends State<SendMessageWidget> {
                     //   bottomPadding4,
                     //   _bottomPadding,
                     // ),
-                    padding: EdgeInsets.fromLTRB(
+                    padding: const EdgeInsets.fromLTRB(
                       0,
                       0,
                       0,
