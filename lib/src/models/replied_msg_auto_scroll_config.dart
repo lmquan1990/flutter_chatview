@@ -30,7 +30,8 @@ class RepliedMsgAutoScrollConfig {
   const RepliedMsgAutoScrollConfig({
     this.enableHighlightRepliedMsg = true,
     this.enableScrollToRepliedMsg = true,
-    this.highlightColor = Colors.grey,
+    // this.highlightColor = Colors.grey,
+    this.highlightColor = const Color(0xFF2b3338),
     this.highlightDuration = const Duration(milliseconds: 500),
     this.highlightScale = 1.1,
     this.highlightScrollDuration = const Duration(milliseconds: 300),

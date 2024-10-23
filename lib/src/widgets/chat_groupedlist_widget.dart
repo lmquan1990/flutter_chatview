@@ -210,8 +210,6 @@ class _ChatGroupedListWidgetState extends State<ChatGroupedListWidget>
   Future<void> _onReplyTap(String id, List<Message>? messages) async {
     // Finds the replied message if exists
     final repliedMessages = messages?.firstWhere((message) => id == message.id);
-    // final repliedMsgAutoScrollConfig =
-    //     chatListConfig.repliedMessageConfig?.repliedMsgAutoScrollConfig;
     const highlightDuration = Duration(milliseconds: 200);
     // Scrolls to replied message and highlights
     if (repliedMessages != null && repliedMessages.key.currentState != null) {
@@ -222,13 +220,12 @@ class _ChatGroupedListWidgetState extends State<ChatGroupedListWidget>
         curve: Curves.easeIn,
         duration: highlightDuration,
       );
-      // if (repliedMsgAutoScrollConfig?.enableHighlightRepliedMsg ?? false) {
+      
       _replyId.value = id;
 
       Future.delayed(highlightDuration, () {
         _replyId.value = null;
       });
-      // }
     }
   }
 
