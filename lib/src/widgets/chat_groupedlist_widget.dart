@@ -24,7 +24,6 @@ import 'package:chatview/src/extensions/extensions.dart';
 import 'package:chatview/src/widgets/suggestions/suggestion_list.dart';
 import 'package:chatview/src/widgets/type_indicator_widget.dart';
 import 'package:flutter/material.dart';
-// import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import 'chat_bubble_widget.dart';
 import 'chat_group_header.dart';
@@ -211,27 +210,25 @@ class _ChatGroupedListWidgetState extends State<ChatGroupedListWidget>
   Future<void> _onReplyTap(String id, List<Message>? messages) async {
     // Finds the replied message if exists
     final repliedMessages = messages?.firstWhere((message) => id == message.id);
-    final repliedMsgAutoScrollConfig =
-        chatListConfig.repliedMessageConfig?.repliedMsgAutoScrollConfig;
-    final highlightDuration = repliedMsgAutoScrollConfig?.highlightDuration ??
-        const Duration(milliseconds: 300);
+    // final repliedMsgAutoScrollConfig =
+    //     chatListConfig.repliedMessageConfig?.repliedMsgAutoScrollConfig;
+    const highlightDuration = Duration(milliseconds: 200);
     // Scrolls to replied message and highlights
     if (repliedMessages != null && repliedMessages.key.currentState != null) {
       await Scrollable.ensureVisible(
         repliedMessages.key.currentState!.context,
         // This value will make widget to be in center when auto scrolled.
         alignment: 0.5,
-        curve:
-            repliedMsgAutoScrollConfig?.highlightScrollCurve ?? Curves.easeIn,
+        curve: Curves.easeIn,
         duration: highlightDuration,
       );
-      if (repliedMsgAutoScrollConfig?.enableHighlightRepliedMsg ?? false) {
-        _replyId.value = id;
+      // if (repliedMsgAutoScrollConfig?.enableHighlightRepliedMsg ?? false) {
+      _replyId.value = id;
 
-        Future.delayed(highlightDuration, () {
-          _replyId.value = null;
-        });
-      }
+      Future.delayed(highlightDuration, () {
+        _replyId.value = null;
+      });
+      // }
     }
   }
 
