@@ -210,7 +210,7 @@ class _ChatGroupedListWidgetState extends State<ChatGroupedListWidget>
   Future<void> _onReplyTap(String id, List<Message>? messages) async {
     // Finds the replied message if exists
     final repliedMessages = messages?.firstWhere((message) => id == message.id);
-    const highlightDuration = Duration(milliseconds: 200);
+    const highlightDuration = Duration(milliseconds: 300);
     // Scrolls to replied message and highlights
     if (repliedMessages != null && repliedMessages.key.currentState != null) {
       await Scrollable.ensureVisible(
