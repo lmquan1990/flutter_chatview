@@ -1,5 +1,6 @@
 import 'package:chatview/src/extensions/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class ScrollToBottomButton extends StatefulWidget {
   const ScrollToBottomButton({super.key});
@@ -75,7 +76,7 @@ class ScrollToBottomButtonState extends State<ScrollToBottomButton> {
               padding: const EdgeInsets.all(4),
               child: scrollToBottomButtonConfig?.icon ??
                   const Icon(
-                    Icons.keyboard_arrow_down_rounded,
+                    IconsaxPlusLinear.arrow_down_2,
                     color: Colors.grey,
                     weight: 10,
                     size: 30,

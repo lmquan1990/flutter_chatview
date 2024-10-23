@@ -28,7 +28,7 @@ class PackageStrings {
   static const String unsend = "Unsend";
   static const String reply = "Reply";
   static const String replyTo = "Replying to";
-  static const String message = "Ask Nakama";
+  static const String message = "Ask your nakama";
   static const String reactionPopupTitle =
       "Tap and hold to multiply your reaction";
   static const String photo = "Photo";
