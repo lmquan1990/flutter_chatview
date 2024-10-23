@@ -317,7 +317,7 @@ class _ChatBubbleWidgetState extends State<ChatBubbleWidget> {
                   controller: chatController,
                   highlightColor: chatListConfig.repliedMessageConfig
                           ?.repliedMsgAutoScrollConfig.highlightColor ??
-                      Colors.grey,
+                      const Color(0xFF2b3338),
                   highlightScale: chatListConfig.repliedMessageConfig
                           ?.repliedMsgAutoScrollConfig.highlightScale ??
                       1.1,
