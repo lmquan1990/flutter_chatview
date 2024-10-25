@@ -76,7 +76,7 @@ class ScrollToBottomButtonState extends State<ScrollToBottomButton> {
               padding: const EdgeInsets.all(4),
               child: scrollToBottomButtonConfig?.icon ??
                   const Icon(
-                    IconsaxPlusLinear.arrow_down_2,
+                    IconsaxPlusLinear.arrow_down,
                     color: Colors.grey,
                     weight: 10,
                     size: 30,
