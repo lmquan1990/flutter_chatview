@@ -88,7 +88,7 @@ class _ChatUITextFieldState extends State<ChatUITextField> {
       sendMessageConfig?.cancelRecordConfiguration;
 
   OutlineInputBorder get _outLineBorder => OutlineInputBorder(
-        borderSide: const BorderSide(color: Colors.white12, width: 1.5),
+        borderSide: const BorderSide(color: Colors.white24, width: 1.5),
         borderRadius: widget.sendMessageConfig?.textFieldConfig?.borderRadius ??
             BorderRadius.circular(textFieldBorderRadius),
       );
@@ -138,7 +138,8 @@ class _ChatUITextFieldState extends State<ChatUITextField> {
       decoration: BoxDecoration(
         borderRadius: textFieldConfig?.borderRadius ??
             BorderRadius.circular(textFieldBorderRadius),
-        color: sendMessageConfig?.textFieldBackgroundColor ?? Colors.white,
+        // color: sendMessageConfig?.textFieldBackgroundColor ?? Colors.white,
+        color: const Color(0xFF0D1319),
       ),
       child: ValueListenableBuilder<bool>(
         valueListenable: isRecording,
@@ -200,7 +201,7 @@ class _ChatUITextFieldState extends State<ChatUITextField> {
                               letterSpacing: 0.25,
                             ),
                         contentPadding: textFieldConfig?.contentPadding ??
-                            const EdgeInsets.symmetric(horizontal: 6),
+                            const EdgeInsets.symmetric(horizontal: 10),
                         border: outlineBorder,
                         focusedBorder: outlineBorder,
                         enabledBorder: outlineBorder,
