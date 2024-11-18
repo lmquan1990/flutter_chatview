@@ -88,7 +88,7 @@ class _ChatUITextFieldState extends State<ChatUITextField> {
       sendMessageConfig?.cancelRecordConfiguration;
 
   OutlineInputBorder get _outLineBorder => OutlineInputBorder(
-        borderSide: const BorderSide(color: Colors.transparent),
+        borderSide: const BorderSide(color: Colors.white12, width: 1.5),
         borderRadius: widget.sendMessageConfig?.textFieldConfig?.borderRadius ??
             BorderRadius.circular(textFieldBorderRadius),
       );
