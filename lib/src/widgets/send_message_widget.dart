@@ -253,8 +253,7 @@ class SendMessageWidgetState extends State<SendMessageWidget> {
                           ),
                           widget.messageConfig!.isReadOnly!
                               ? const ColoredBox(
-                                  // color: Color(0xFF161616),
-                                  color: Colors.red,
+                                  color: Color(0xFF161616),
                                   child: Padding(
                                     padding: EdgeInsets.only(
                                         left: 15,
@@ -271,10 +270,11 @@ class SendMessageWidgetState extends State<SendMessageWidget> {
                               : ColoredBox(
                                   // color: const Color(0xFF0D1319),
                                   color: Colors.blue,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 0, right: 0, top: 10, bottom: 10),
-                                    child: ChatUITextField(
+                                  // child: Padding(
+                                  //   padding: const EdgeInsets.only(
+                                  //       left: 0, right: 0, top: 10, bottom: 10),
+                                    child: 
+                                    ChatUITextField(
                                       focusNode: _focusNode,
                                       textEditingController:
                                           _textEditingController,
@@ -284,7 +284,7 @@ class SendMessageWidgetState extends State<SendMessageWidget> {
                                       onRecordingComplete: _onRecordingComplete,
                                       onImageSelected: _onImageSelected,
                                     ),
-                                  ),
+                                  // ),
                                 ),
                         ],
                       ),
