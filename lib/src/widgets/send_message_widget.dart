@@ -271,7 +271,7 @@ class SendMessageWidgetState extends State<SendMessageWidget> {
                                   color: const Color(0xFF0D1319),
                                   child: Padding(
                                     padding: const EdgeInsets.only(
-                                        left: 5, right: 5, top: 10, bottom: 10),
+                                        left: 0, right: 0, top: 10, bottom: 10),
                                     child: ChatUITextField(
                                       focusNode: _focusNode,
                                       textEditingController:
