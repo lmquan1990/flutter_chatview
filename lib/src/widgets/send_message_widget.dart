@@ -103,7 +103,7 @@ class SendMessageWidgetState extends State<SendMessageWidget> {
       alignment: Alignment.bottomCenter,
       child: widget.sendMessageBuilder != null
           ? widget.sendMessageBuilder!(replyMessage)
-          : SizedBox(
+          : ColoredBox(color: Colors.red, child: SizedBox(
               width: MediaQuery.of(context).size.width,
               child: Stack(
                 children: [
@@ -271,7 +271,7 @@ class SendMessageWidgetState extends State<SendMessageWidget> {
                                   color: const Color(0xFF0D1319),
                                   child: Padding(
                                     padding: const EdgeInsets.only(
-                                        left: 30, right: 30, top: 10, bottom: 10),
+                                        left: 0, right: 0, top: 10, bottom: 10),
                                     child: ChatUITextField(
                                       focusNode: _focusNode,
                                       textEditingController:
@@ -290,7 +290,7 @@ class SendMessageWidgetState extends State<SendMessageWidget> {
                   ),
                 ],
               ),
-            ),
+            ),) ,
     );
   }
 
