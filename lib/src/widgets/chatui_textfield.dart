@@ -132,9 +132,9 @@ class _ChatUITextFieldState extends State<ChatUITextField> {
     final outlineBorder = _outLineBorder;
 
     return Container(
-      padding:
-          textFieldConfig?.padding ?? const EdgeInsets.only(left: 10),
-      margin: textFieldConfig?.margin,
+      // padding:
+      //     textFieldConfig?.padding ?? const EdgeInsets.only(left: 10),
+      // margin: textFieldConfig?.margin,
       decoration: BoxDecoration(
         borderRadius: textFieldConfig?.borderRadius ??
             BorderRadius.circular(textFieldBorderRadius),
