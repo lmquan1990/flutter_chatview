@@ -268,23 +268,22 @@ class SendMessageWidgetState extends State<SendMessageWidget> {
                                   ),
                                 )
                               : ColoredBox(
-                                  // color: const Color(0xFF0D1319),
-                                  color: Colors.blue,
-                                  // child: Padding(
-                                  //   padding: const EdgeInsets.only(
-                                  //       left: 0, right: 0, top: 10, bottom: 10),
-                                    child: 
-                                    ChatUITextField(
-                                      focusNode: _focusNode,
-                                      textEditingController:
-                                          _textEditingController,
-                                      onPressed: _onPressed,
-                                      sendMessageConfig:
-                                          widget.sendMessageConfig,
-                                      onRecordingComplete: _onRecordingComplete,
-                                      onImageSelected: _onImageSelected,
-                                    ),
-                                  // ),
+                                  color: const Color(0xFF0D1319),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 0, right: 0, top: 10, bottom: 10),
+                                    child: TextField(),
+                                    // ChatUITextField(
+                                    //   focusNode: _focusNode,
+                                    //   textEditingController:
+                                    //       _textEditingController,
+                                    //   onPressed: _onPressed,
+                                    //   sendMessageConfig:
+                                    //       widget.sendMessageConfig,
+                                    //   onRecordingComplete: _onRecordingComplete,
+                                    //   onImageSelected: _onImageSelected,
+                                    // ),
+                                  ),
                                 ),
                         ],
                       ),
